@@ -2,8 +2,10 @@ var http = require("http"),
     url = require("url"),
     path = require("path"),
     fs = require("fs")
-    port = process.argv[2] || 8080;
- 
+    port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+
+var ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+
 http.createServer(function(request, response) {
  
   var uri = url.parse(request.url).pathname;
@@ -32,6 +34,6 @@ http.createServer(function(request, response) {
       response.end();
     });
   });
-}).listen(parseInt(port, 10));
+}).listen(parseInt(port, 10), ip_address);
  
 console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
