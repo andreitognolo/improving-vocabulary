@@ -1,0 +1,11 @@
+<section>
+	
+	<div class="episode"></div>
+	
+	<script>
+		$.get('/s/Episode/nextTranscription', function(id) {
+			console.log('id', id);
+			$('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
+		});
+	</script>
+</section>

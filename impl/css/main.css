@@ -5,3 +5,11 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
+
+.episode {
+	text-align: center;	
+}
+
+.episode img{
+	width: 1000px;
+}
