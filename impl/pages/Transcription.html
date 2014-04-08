@@ -1,29 +1,34 @@
 <section class="page">
-	
-	<div class="episode"></div>
-	
-	<div class="new-sentence">
+	<section class="transcription">
+		<div class="episode"></div>
+		
 		<form class="form-inline" role="form">
-			<div class="form-group">
-				<select id="character" class="character form-control">
-					<option>Escolha o personagem...</option>
-					<option value="CALVIN">Calvin</option>
-					<option value="HOBBES">Hobbes</option>
-					<option value="PAI">Pai</option>
-					<option value="MAE">Mae</option>
-					<option value="SUSY">Susy</option>
-					<option value="PROFESSORA">Professora</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="sr-only" for="sentence">Fala</label>
-				<input type="text" id="sentence" class="sentence form-control" placeholder="Digite aqui a fala do personagem">
-			</div>
-			<div class="form-group">
-				<button type="button" class="add btn btn-primary">Adicionar</button>
+			<div class="new-sentence">
+				<div class="form-group">
+					<select id="character" class="character form-control">
+						<option value="CHOOSE">Escolha o personagem...</option>
+						<option value="CALVIN">Calvin</option>
+						<option value="HOBBES">Hobbes</option>
+						<option value="PAI">Pai</option>
+						<option value="MAE">Mae</option>
+						<option value="SUSY">Susy</option>
+						<option value="PROFESSORA">Professora</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="sr-only" for="sentence">Fala</label>
+					<input type="text" id="sentence" class="sentence form-control" placeholder="Digite aqui a fala do personagem">
+				</div>
+				<div class="form-group">
+					<button type="submit" class="add btn btn-primary">Adicionar</button>
+				</div>
 			</div>
 		</form>
-	</div>
+		
+		<div>
+			<button type="button" class="save btn btn-success">Salvar</button>
+		</div>
+	</section>
 	
 	<script>
 		$.get('/s/Episode/nextTranscription', function(id) {
@@ -31,8 +36,38 @@
 			$('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
 		});
 		
-		$('.anotherSentence').click(function() {
-			console.log('teste');
+		$('.add').click(function() {
+			var p = $('<p>');
+			var character = $('.character').val();
+			var sentence = $('.sentence').val();
+			p.html('<strong>' + character + '</strong>: ' + sentence);
+			p.data('character', character);
+			p.data('sentence', sentence);
+			
+			p.insertBefore($('.new-sentence'));
+			
+			$('.character').val('CHOOSE');
+			$('.sentence').val('');
+			
+			return false;
+		});
+		
+		$('.save').click(function() {
+			var args = [];
+			$('p').each(function() {
+				args.push({
+					'character' : $(this).data('character'),
+					'sentence' : $(this).data('sentence')
+				});
+			});
+			
+			var data = {
+				args : args
+			}
+			
+			$.post('/s/Episode/save', data, function() {
+								
+			});	
 		});
 	</script>
 </section>

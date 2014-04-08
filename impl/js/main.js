@@ -13,7 +13,7 @@
 		    url : 'pages/' + page + '.html',
 		    dataType : 'html',
 		    success : function(text) {
-		    	$('.content').html($(text).filter('section').html());
+		    	$('.content').html($(text).html());
 		    }
 		});
 	});

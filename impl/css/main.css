@@ -7,21 +7,22 @@ body {
 }
 
 .episode {
-	text-align: center;	
+	text-align: center;
+	margin-bottom: 30px;	
 }
 
 .episode img{
 	width: 800px;
 }
 
-.new-sentence {
-	margin-top: 30px;
-}
-
 select.character {
 	width: auto;	
 }
 
-.new-sentence input.sentence {
+.form-inline input.sentence {
 	width: 800px;	
+}
+
+section.transcription .save {
+	margin-top: 20px;
 }
