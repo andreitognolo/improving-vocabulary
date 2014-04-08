@@ -11,5 +11,17 @@ body {
 }
 
 .episode img{
-	width: 1000px;
+	width: 800px;
+}
+
+.new-sentence {
+	margin-top: 30px;
+}
+
+select.character {
+	width: auto;	
+}
+
+.new-sentence input.sentence {
+	width: 800px;	
 }
