@@ -2,6 +2,8 @@ var http = require("http");
 var url = require("url");
 var path = require("path");
 var fs = require("fs");
+var qs = require('querystring');
+
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 var ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
 
@@ -40,13 +42,24 @@ function processStatic(uri, request, response) {
 	});
 }
 
-function processService(uri, request, response) {
+function processService(uri, req, response) {
 	response.writeHead(200, {
 		"Content-Type" : "text/json"
 	});
 	var service = uri.split('/')[2];
 	var func = uri.split('/')[3];
-	response.end(eval(service + "Service." + func + "()"));
+	
+	var body = '';
+    req.on('data', function (data) {
+        body += data;
+    });
+    req.on('end', function () {
+        if (body) {
+        	response.end(eval(service + "Service." + func).call(null, JSON.parse(body)));
+        } else {
+        	response.end(eval(service + "Service." + func + "()"));
+        }
+    });
 }
 
 http.createServer(function(request, response) {

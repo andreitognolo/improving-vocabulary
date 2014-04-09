@@ -61,11 +61,7 @@
 				});
 			});
 			
-			var data = {
-				args : args
-			}
-			
-			$.post('/s/Episode/save', data, function() {
+			$.post('/s/Episode/save', JSON.stringify(args), function() {
 								
 			});	
 		});
