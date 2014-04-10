@@ -57,7 +57,10 @@ function processService(uri, req, response) {
         if (body) {
         	response.end(eval(service + "Service." + func).call(null, JSON.parse(body)));
         } else {
-        	response.end(eval(service + "Service." + func + "()"));
+        	var ret = eval(service + "Service." + func + "()");
+        	ret.done(function(result) {
+        		response.end(result);
+        	});
         }
     });
 }
