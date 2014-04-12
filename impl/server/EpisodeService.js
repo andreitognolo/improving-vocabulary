@@ -6,7 +6,12 @@ exports.nextTranscription = function() {
 
 			var mongoHost = process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1';
 			var mongoIp = process.env.OPENSHIFT_MONGODB_DB_PORT || '27017';
-			MongoClient.connect('mongodb://' + mongoHost + ':' + mongoIp + '/improveyourvocabulary', function(err, db) {
+			var mongoUser = 'admin';
+			var mongoPassword = '4nVL27YyApru';
+			var mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoHost + ':' + mongoIp + '/improveyourvocabulary';
+			console.log(mongoURL);
+			
+			MongoClient.connect(mongoURL, function(err, db) {
 				if (err)
 					throw err;
 
@@ -16,6 +21,8 @@ exports.nextTranscription = function() {
 					db.close();
 				});
 			});
+			
+			//callback('19851119');
 		}
 	}
 }
