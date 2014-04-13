@@ -1,0 +1,41 @@
+<section class="page">
+	<section class="transcription">
+			<div class="episode"></div>
+			
+			<div class="sentences"></div>
+			<div>
+				<button type="button" class="next btn btn-success">Proxima</button>
+			</div>
+	</section>
+	
+	<script>
+		(function open() {
+			var previousEpisodeId = querystring().get('previousEpisodeId');
+			if (!previousEpisodeId) {
+				location = location + '?previousEpisodeId=1'; 
+				return;
+			}
+			$('.episode').html('');
+			$.post('/s/Episode/next', JSON.stringify({previousEpisodeId: previousEpisodeId}), function(episode) {
+				$('.episode').append($('<img src="img/calvin-hobbes/' + episode.id + '.gif" />'));
+				
+				if (episode.sentences) {
+					episode.sentences.forEach(function(sentence) {
+						var p = $('<p>');
+						var character = sentence.character;
+						var sentence = sentence.sentence;
+						p.html('<strong>' + character + '</strong>: ' + sentence);
+						
+						$('.sentences').append(p);
+					});
+				} else {
+					$.warning('Esse episodio ainda nao foi transcrito!', 10000);
+				}
+				
+				$('.next').click(function() {
+					location = location.href.split('?')[0] + '?previousEpisodeId=' + episode.id;
+				});
+			});
+		})();
+	</script>
+</section>

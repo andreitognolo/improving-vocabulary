@@ -27,3 +27,11 @@ select.character {
 section.transcription .save {
 	margin-top: 20px;
 }
+
+div.message {
+    position: fixed;
+    top: 8px;
+    right: 50px;
+    z-index: 2000;
+    width: 500px;
+}

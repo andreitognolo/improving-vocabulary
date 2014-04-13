@@ -1,3 +1,17 @@
+exports.next = function(data) {
+	return {
+		done : function(callback) {
+			require('./MongoHelper').connect(function(db) {
+				var episodes = db.collection('episodes');
+				episodes.find({id:{$gt:parseInt(data.previousEpisodeId)}}).sort({id:1}).toArray(function(err, result) {
+					callback(JSON.stringify(result[0]));
+					db.close();
+				});
+			});
+		}
+	}
+}
+
 exports.nextTranscription = function() {
 	return {
 		done : function(callback) {
@@ -19,7 +33,7 @@ exports.saveTranscription = function(episode) {
 			console.log('saveTranscription', episode.id);
 			require('./MongoHelper').connect(function(db) {
 				var episodes = db.collection('episodes');
-				episodes.update({id: episode.id}, {$set:{transcripted: true}}, function() {
+				episodes.update({id: episode.id}, {$set:{transcripted: true, sentences: episode.sentences}}, function() {
 					callback();
 				});
 			});

@@ -59,12 +59,12 @@ function processService(uri, req, response) {
         if (body) {
         	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
         	ret.done(function(result) {
-        		response.end(result);
+        		response.end(result || 'void');
         	});
         } else {
         	var ret = eval(service + "Service." + func + "()");
         	ret.done(function(result) {
-        		response.end(result);
+        		response.end(result || 'void');
         	});
         }
     });
