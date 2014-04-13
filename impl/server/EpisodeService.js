@@ -3,8 +3,9 @@ exports.nextTranscription = function() {
 		done : function(callback) {
 			require('./MongoHelper').connect(function(db) {
 				var collection = db.collection('episodes');
-				collection.find().toArray(function(err, results) {
-					callback(results[0].id);
+				collection.find({transcription: {$ne: true}}).toArray(function(err, results) {
+					console.log('nextTranscription', results[0].id.toString());
+					callback(results[0].id.toString());
 					db.close();
 				});
 			});
@@ -12,11 +13,17 @@ exports.nextTranscription = function() {
 	}
 }
 
-exports.save = function(json) {
-	for (i = 0; i < json.length; i++) {
-		var el = json[i];
-		console.log(el.character);
-		console.log(el.sentence);
+exports.saveTranscription = function(episode) {
+	return {
+		done: function(callback) {
+			console.log('saveTranscription', episode.id);
+			require('./MongoHelper').connect(function(db) {
+				var episodes = db.collection('episodes');
+				episodes.update({id: episode.id}, {$set:{transcripted: true}}, function() {
+					callback();
+				});
+			});
+		}
 	}
 }
 

@@ -32,38 +32,42 @@
 	
 	<script>
 		$.get('/s/Episode/nextTranscription', function(id) {
-			console.log('id', id);
 			$('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
-		});
 		
-		$('.add').click(function() {
-			var p = $('<p>');
-			var character = $('.character').val();
-			var sentence = $('.sentence').val();
-			p.html('<strong>' + character + '</strong>: ' + sentence);
-			p.data('character', character);
-			p.data('sentence', sentence);
-			
-			p.insertBefore($('.new-sentence'));
-			
-			$('.character').val('CHOOSE');
-			$('.sentence').val('');
-			
-			return false;
-		});
-		
-		$('.save').click(function() {
-			var args = [];
-			$('p').each(function() {
-				args.push({
-					'character' : $(this).data('character'),
-					'sentence' : $(this).data('sentence')
-				});
+			$('.add').click(function() {
+				var p = $('<p>');
+				var character = $('.character').val();
+				var sentence = $('.sentence').val();
+				p.html('<strong>' + character + '</strong>: ' + sentence);
+				p.data('character', character);
+				p.data('sentence', sentence);
+				
+				p.insertBefore($('.new-sentence'));
+				
+				$('.character').val('CHOOSE');
+				$('.sentence').val('');
+				
+				return false;
 			});
 			
-			$.post('/s/Episode/save', JSON.stringify(args), function() {
-								
-			});	
+			$('.save').click(function() {
+				var sentences = [];
+				$('p').each(function() {
+					sentences.push({
+						'character' : $(this).data('character'),
+						'sentence' : $(this).data('sentence')
+					});
+				});
+				
+				var episode = {
+					id: id,
+					sentences: sentences
+				}
+				
+				$.post('/s/Episode/saveTranscription', JSON.stringify(episode), function() {
+					
+				});
+			});
 		});
 	</script>
 </section>
