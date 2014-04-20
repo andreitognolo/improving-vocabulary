@@ -60,7 +60,8 @@ exports.sync = function() {
 				files.forEach(function(value) {
 					mongoHelper.connect(function(db) {
 						var episodes = db.collection('episodes');
-						episodes.update({'id': value}, {$set:{'id': value}}, {upsert:true, w: 1}, function(err, result) {
+						var year = parseInt(value.toString().substring(0, 4));	
+						episodes.update({'id': value}, {$set:{'id': value, 'year': year}}, {upsert:true, w: 1}, function(err, result) {
 							if (err) {
 								throw err;
 							}
@@ -71,7 +72,23 @@ exports.sync = function() {
 					});
 				});
 				
-				callback();
+				callback('UPDATING: ' + files.length);
+			});
+		}
+	}
+}
+
+exports.find = function(params) {
+	return {
+		done: function(callback) {
+			console.log(params);
+			var mongoHelper = require('./MongoHelper');
+			mongoHelper.connect(function(db) {
+				var episodes = db.collection('episodes');
+				episodes.find({year: params.year}).sort({id:1}).toArray(function(err, result) {
+					callback(JSON.stringify(result));
+					db.close();
+				});
 			});
 		}
 	}

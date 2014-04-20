@@ -52,22 +52,39 @@ function processService(uri, req, response) {
 	var func = uri.split('/')[3];
 	
 	var body = '';
-    req.on('data', function (data) {
-        body += data;
-    });
-    req.on('end', function () {
-        if (body) {
-        	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
-        	ret.done(function(result) {
-        		response.end(result || 'void');
-        	});
-        } else {
-        	var ret = eval(service + "Service." + func + "()");
-        	ret.done(function(result) {
-        		response.end(result || 'void');
-        	});
-        }
-    });
+	if (req.method == 'POST') {
+	    req.on('data', function (data) {
+	        body += data;
+	    });
+	    
+	    req.on('end', function () {
+	    	callservice(body, service, func, response);
+	    });
+	} else {
+		var params = require('./server/util/querystring').params(req.url);
+		if (params.data) {
+			body = params.data[0];
+		}
+		callservice(body, service, func, response);
+	}
+}
+
+function callservice(body, service, func, response) {
+	if (body) {
+		console.log('body', body);
+		console.log('teste');
+		console.log('parsed', JSON.parse(body));
+		
+    	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
+    	ret.done(function(result) {
+    		response.end(result || 'void');
+    	});
+    } else {
+    	var ret = eval(service + "Service." + func + "()");
+    	ret.done(function(result) {
+    		response.end(result || 'void');
+    	});
+    }
 }
 
 http.createServer(function(request, response) {

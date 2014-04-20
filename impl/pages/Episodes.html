@@ -1,0 +1,18 @@
+<section class="page">
+	<section class="episodes">
+		<select class="years">
+			<option value="1985">1985</option>
+			<option value="1986">1986</option>
+			<option value="1987">1987</option>
+		</select>
+	</section>
+	
+	<script>
+		(function open() {
+			var year = $('.year option:selected').val();
+			$.post('/s/Episode/find', {"year": year}, function(err, result) {
+				console.log(result);				
+			});
+		})();
+	</script>
+</section>
