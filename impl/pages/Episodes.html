@@ -21,13 +21,20 @@
 			}), function(result) {
 				console.log(result);
 				var table = $('<table>');
-				var header = '<tr><th>ID</th><th>Transcripted</th></tr>';
+				var header = '<tr><th>ID</th><th>Acao</th></tr>';
 				table.append(header);
 				
 				result.forEach(function(episode) {
-					var id = '<td><a href="#Episode?episodeId=' + episode.id + '">' + episode.id + '</a></td>';
-					var transcripted = '<td>' + (episode.transcripted || 'false') + '</td>';
-					table.append('<tr>' + id + transcripted + '</tr>');
+					var id = '<td>' + episode.id + '</td>';
+					
+					var acao;
+					if (episode.transcripted) {
+						acao = '<td><a href="#Episode?episodeId=' + episode.id + '">Ver</a></td>';
+					} else {
+						acao = '<td><a href="#Transcription?id=' + episode.id + '">Transcrever</a></td>';
+					}
+						
+					table.append('<tr>' + id + acao + '</tr>');
 				});
 
 				$('.list').html(table);
