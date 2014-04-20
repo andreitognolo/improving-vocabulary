@@ -35,3 +35,7 @@ div.message {
     z-index: 2000;
     width: 500px;
 }
+
+table td {
+	padding: 5px;
+}

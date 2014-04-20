@@ -5,13 +5,45 @@
 			<option value="1986">1986</option>
 			<option value="1987">1987</option>
 		</select>
+
+		<div class="list"></div>
 	</section>
-	
+
 	<script>
+		function list() {
+			var year = querystring().get('year');
+			if (!year) {
+				year = $('.years option:selected').val();
+			}
+			
+			$.post('/s/Episode/find', JSON.stringify({
+				"year" : year
+			}), function(result) {
+				console.log(result);
+				var table = $('<table>');
+				var header = '<tr><th>ID</th><th>Transcripted</th></tr>';
+				table.append(header);
+				
+				result.forEach(function(episode) {
+					var id = '<td><a href="#Episode?episodeId=' + episode.id + '">' + episode.id + '</a></td>';
+					var transcripted = '<td>' + (episode.transcripted || 'false') + '</td>';
+					table.append('<tr>' + id + transcripted + '</tr>');
+				});
+
+				$('.list').html(table);
+			});
+		}
+		
 		(function open() {
-			var year = $('.year option:selected').val();
-			$.post('/s/Episode/find', {"year": year}, function(err, result) {
-				console.log(result);				
+			var year = querystring().get('year');
+			if (year) {
+				$('.years').val(year);
+			}
+			
+			list();
+			
+			$('select.years').change(function() {
+				location.hash = "#Episodes?year=" + $('.years option:selected').val();
 			});
 		})();
 	</script>

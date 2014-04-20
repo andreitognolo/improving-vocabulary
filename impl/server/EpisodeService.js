@@ -85,7 +85,14 @@ exports.find = function(params) {
 			var mongoHelper = require('./MongoHelper');
 			mongoHelper.connect(function(db) {
 				var episodes = db.collection('episodes');
-				episodes.find({year: params.year}).sort({id:1}).toArray(function(err, result) {
+				if (params.year) {
+					params.year = parseInt(params.year);
+				}
+				if (params.id) {
+					params.id = parseInt(params.id);
+				}
+				
+				episodes.find(params).sort({id:1}).toArray(function(err, result) {
 					callback(JSON.stringify(result));
 					db.close();
 				});

@@ -9,14 +9,26 @@
 	</section>
 	
 	<script>
+		function next() {
+			var episodeId = querystring().get('episodeId');
+			if (!episodeId) {
+				episodeId = 1;
+			}
+				
+			$.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
+				location = location.href.split('?')[0] + '?episodeId=' + episode.id;
+			});
+		}
+		
 		(function open() {
-			var previousEpisodeId = querystring().get('previousEpisodeId');
-			if (!previousEpisodeId) {
-				location = location + '?previousEpisodeId=1'; 
+			var episodeId = querystring().get('episodeId');
+			if (!episodeId) {
+				next();
 				return;
 			}
 			$('.episode').html('');
-			$.post('/s/Episode/next', JSON.stringify({previousEpisodeId: previousEpisodeId}), function(episode) {
+			$.post('/s/Episode/find', JSON.stringify({id: episodeId}), function(episodes) {
+				var episode = episodes[0];
 				$('.episode').append($('<img src="img/calvin-hobbes/' + episode.id + '.gif" />'));
 				
 				if (episode.sentences) {
@@ -32,9 +44,7 @@
 					$.warning('Esse episodio ainda nao foi transcrito!', 10000);
 				}
 				
-				$('.next').click(function() {
-					location = location.href.split('?')[0] + '?previousEpisodeId=' + episode.id;
-				});
+				$('.next').click(next);
 			});
 		})();
 	</script>
