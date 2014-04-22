@@ -43,8 +43,6 @@ function processStatic(uri, request, response) {
 }
 
 function processService(uri, req, response) {
-	console.info('Service: ' + uri);
-	
 	response.writeHead(200, {
 		"Content-Type" : "text/json"
 	});
@@ -71,10 +69,6 @@ function processService(uri, req, response) {
 
 function callservice(body, service, func, response) {
 	if (body) {
-		console.log('body', body);
-		console.log('teste');
-		console.log('parsed', JSON.parse(body));
-		
     	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
     	ret.done(function(result) {
     		response.end(result || 'void');
