@@ -9,6 +9,7 @@
 			<button type="button" class="save btn btn-success">Salvar</button>
 		</div>
 	</section>
+	
 	<section class="template">
 		<div class="new-sentence">
 			<div class="form-group">
@@ -38,7 +39,6 @@
 		(function open() {
 			function show() {
 				$('.episode').html('');
-				$('.form-inline p').remove();
 	
 				var id = querystring().get('id');
 				if (!id) {
@@ -50,8 +50,19 @@
 				
 				$('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
 				
-				newSentence();
-
+				$.get('/s/Episode/find?data={"id": ' + id + '}', function(episodes) {
+					var episode = episodes[0];
+					if (episode.sentences && episode.sentences.length) {
+						episode.sentences.forEach(function(sentence) {
+							newSentence();
+							$('.form-inline .new-sentence:last select').val(sentence.character);
+							$('.form-inline .new-sentence:last input').val(sentence.sentence);
+						});
+					} else {
+						newSentence();
+					}
+				});
+				
 				$('.save').click(function() {
 					var sentences = [];
 					var fail = false;
@@ -83,7 +94,7 @@
 
 					$.post('/s/Episode/saveTranscription', JSON.stringify(episode)).complete(function(result) {
 						$.success('Episodio salvo com sucesso');
-						location.hash = "#Transcription";
+						location.hash = "#Episode?episodeId=" + id;
 					});
 				});
 			}

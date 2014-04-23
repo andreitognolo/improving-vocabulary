@@ -1,27 +1,40 @@
 <section class="page">
-	<section class="transcription">
-			<div class="episode"></div>
-			
-			<div class="sentences"></div>
-			<div>
-				<button type="button" class="next btn btn-success">Proxima</button>
-			</div>
+	<section>
+		<div class="episode"></div>
+		
+		<div class="sentences"></div>
+		<div class="episode-navigation">
+			<button type="button" class="previous btn btn-success">Anterior</button>
+			<button type="button" class="next btn btn-success">Proxima</button>
+		</div>
+		
+		<div>
+			<button type="button" class="transcription btn btn-primary">Transcription</button>
+		</div>
 	</section>
 	
 	<script>
-		function next() {
-			var episodeId = querystring().get('episodeId');
-			if (!episodeId) {
-				episodeId = 1;
-			}
-				
-			$.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
-				location = location.href.split('?')[0] + '?episodeId=' + episode.id;
-			});
-		}
-		
 		(function open() {
 			var episodeId = querystring().get('episodeId');
+			
+			function clickNext() {
+				if (!episodeId) {
+					episodeId = 1;
+				}
+					
+				$.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
+					location = location.href.split('?')[0] + '?episodeId=' + episode.id;
+				});
+			}
+			
+			function clickPrevious() {
+				
+			}
+			
+			function clickTranscription() {
+				location.hash = "#Transcription?id=" + episodeId;
+			}
+			
 			if (!episodeId) {
 				next();
 				return;
@@ -33,6 +46,7 @@
 				
 				if (episode.sentences) {
 					episode.sentences.forEach(function(sentence) {
+						console.log(sentence);
 						var p = $('<p>');
 						var character = sentence.character;
 						var sentence = sentence.sentence;
@@ -44,7 +58,9 @@
 					$.warning('Esse episodio ainda nao foi transcrito!', 10000);
 				}
 				
-				$('.next').click(next);
+				$('.next').click(clickNext);
+				$('.previous').click(clickPrevious);
+				$('.transcription').click(clickTranscription);
 			});
 		})();
 	</script>

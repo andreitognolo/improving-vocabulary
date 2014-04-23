@@ -21,6 +21,10 @@ body {
 	width: 800px;
 }
 
+.episode-navigation {
+	margin-bottom: 10px;
+}
+
 select.character {
 	width: auto;
 }
