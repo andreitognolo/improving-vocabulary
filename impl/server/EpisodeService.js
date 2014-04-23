@@ -55,8 +55,9 @@ exports.sync = function() {
 				});
 
 				var mongoHelper=require('./MongoHelper');
-				files.forEach(function(value) {
-					mongoHelper.connect(function(db) {
+				mongoHelper.connect(function(db) {
+					var count = 0;
+					files.forEach(function(value) {
 						var episodes = db.collection('episodes');
 						var year = parseInt(value.toString().substring(0, 4));	
 						episodes.update({'id': value}, {$set:{'id': value, 'year': year}}, {upsert:true, w: 1}, function(err, result) {
@@ -65,7 +66,11 @@ exports.sync = function() {
 							}
 							
 							console.log('UPDATE: ' + value + ' - result: ' + result);
-							db.close();
+							count++;
+							
+							if (count == files.length) {
+								db.close();
+							}
 						});
 					});
 				});
