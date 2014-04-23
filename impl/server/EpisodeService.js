@@ -31,8 +31,6 @@ exports.saveTranscription = function(episode) {
 		done: function(callback) {
 			require('./MongoHelper').connect(function(db) {
 				var episodes = db.collection('episodes');
-				console.log('saveTranscription', episode.id, episode.sentences);
-				
 				episodes.update({id: parseInt(episode.id)}, {$set:{transcripted: true, sentences: episode.sentences}}, function() {
 					callback();
 				});

@@ -1,27 +1,36 @@
 body {
-  padding-top: 50px;
+	padding-top: 50px;
 }
+
+.template {
+	display: none;
+}
+
 .starter-template {
-  padding: 40px 15px;
-  text-align: center;
+	padding: 40px 15px;
+	text-align: center;
 }
 
 .episode {
 	text-align: center;
 	margin-bottom: 30px;
-	margin-top: 10px;	
+	margin-top: 10px;
 }
 
-.episode img{
+.episode img {
 	width: 800px;
 }
 
 select.character {
-	width: auto;	
+	width: auto;
 }
 
 .form-inline input.sentence {
-	width: 800px;	
+	width: 800px;
+}
+
+.form-inline div.new-sentence {
+	margin-bottom: 10px;
 }
 
 section.transcription .save {
@@ -29,11 +38,11 @@ section.transcription .save {
 }
 
 div.message {
-    position: fixed;
-    top: 8px;
-    right: 50px;
-    z-index: 2000;
-    width: 500px;
+	position: fixed;
+	top: 8px;
+	right: 50px;
+	z-index: 2000;
+	width: 500px;
 }
 
 table td, table th {

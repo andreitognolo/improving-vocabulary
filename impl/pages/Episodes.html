@@ -19,7 +19,6 @@
 			$.post('/s/Episode/find', JSON.stringify({
 				"year" : year
 			}), function(result) {
-				console.log(result);
 				var table = $('<table>');
 				var header = '<tr><th>ID</th><th>Acao</th></tr>';
 				table.append(header);
