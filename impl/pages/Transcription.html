@@ -65,16 +65,13 @@
 				
 				$('.save').click(function() {
 					var sentences = [];
-					var fail = false;
 					
 					$('.form-inline .new-sentence').each(function() {
 						var character = $(this).find('select').val();
 						var sentence = $(this).find('input').val();
 						
-						if (!character || !sentence) {
-							alert('Voce esqueceu de selecionar algum personagem e/ou fala');
-							fail = true;
-							return false;
+						if (!character && !sentence) {
+							return;
 						}
 						
 						sentences.push({
@@ -83,10 +80,6 @@
 						});
 					});
 
-					if (fail) {
-						return;
-					}
-					
 					var episode = {
 						id : id,
 						sentences : sentences
