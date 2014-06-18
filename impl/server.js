@@ -35,7 +35,14 @@ function processStatic(uri, request, response) {
 				return;
 			}
 
-			response.writeHead(200);
+            if (filename.indexOf('.html') >= 0) {
+			    response.writeHead(200, {
+                    "Content-Type" : "text/html"
+                });
+            } else {
+			    response.writeHead(200);
+            }
+
 			response.write(file, "binary");
 			response.end();
 		});
