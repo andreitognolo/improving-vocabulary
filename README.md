@@ -3,7 +3,7 @@ Improving Vocabulary by Comics
 
 Project to help improve your vocabulary in english, with help of comics.
 
-[![Build Status](https://travis-ci.org/andreitognolo/improving-vocabulary.svg)](https://travis-ci.org/andreitognolo/improving-vocabulary)
+[![Build Status](https://travis-ci.org/andreitognolo/improving-vocabulary.png?branch=master)](https://travis-ci.org/andreitognolo/improving-vocabulary)
 
 Developer information
 ===================
