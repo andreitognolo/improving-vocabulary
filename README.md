@@ -5,7 +5,7 @@ Project to help improve your vocabulary in english, with help of comics.
 
 [![Build Status](https://travis-ci.org/andreitognolo/improving-vocabulary.svg)](https://travis-ci.org/andreitognolo/improving-vocabulary)
 
-Project Information
+Developer information
 ===================
 
 The root project is [impl/](./impl), so all following commands need to be runned inside of it.
