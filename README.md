@@ -3,7 +3,7 @@ improvingvocabulary
 
 Improving Vocabulary by Comics
 
-!https://travis-ci.org/andreitognolo/improving-vocabulary.svg!:https://travis-ci.org/andreitognolo/improving-vocabulary
+https://travis-ci.org/andreitognolo/improving-vocabulary.svg
 
 install project
 ===============
