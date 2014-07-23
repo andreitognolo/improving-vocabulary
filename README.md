@@ -8,7 +8,7 @@ Project to help improve your vocabulary in english, with help of comics.
 Project Information
 ===================
 
-The root project is [impl/](./impl), so all following commands need to runned inside it.
+The root project is [impl/](./impl), so all following commands need to be runned inside of it.
 
 - Configure dependencies, execute: `npm install`
 - Run tests, execute `npm test`
