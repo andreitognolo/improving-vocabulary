@@ -10,6 +10,6 @@ Project Information
 
 The root project is [impl/](./impl), so all following commands need to be runned inside of it.
 
-- Configure dependencies, execute: `npm install`
-- Run tests, execute `npm test`
-- Start server, execute `npm start`, then the server will be started at  `127.0.0.1:8080`
+- Configure dependencies: execute `npm install`
+- Run tests: execute `npm test`
+- Start server: execute `npm start`, then the server will be started at  `127.0.0.1:8080`
