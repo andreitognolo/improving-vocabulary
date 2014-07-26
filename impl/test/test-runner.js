@@ -23,17 +23,8 @@ t.done(function(result){
 });
 
 t.moduleStart(function( details ) {
-  console.log( "Now running: ", details.name );
+  console.log( "Now running module: ", details.name );
 });
-
-t.moduleDone(function( details ) {
-  console.log("");
-  console.log("Finished running: "  + details.name); 
-  console.log("Failed: " + details.failed); 
-  console.log("Total: " + details.total );
-  console.log("");
-});
-
 
 t.testStart(function(details){
    console.log("");
@@ -43,7 +34,6 @@ t.testStart(function(details){
 
 var test = [];
 test.push(require("./simple/simpleTest.js"));
-test.push(require("./service/episodeServiceTest.js"));
 
 
 for(var i = 0; i < test.length; i++){
