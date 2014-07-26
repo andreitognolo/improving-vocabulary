@@ -1,0 +1,30 @@
+{
+  "name": "improveyourvocabulary",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "Improve Your Vocabulary",
+  "main": "server.js",
+  "dependencies": {
+    "mongodb": "~1.4.0"
+  },
+  "devDependencies": {
+    "qunitjs": "~1.14.0"
+  },
+  "scripts": {
+    "test": "node test/test-runner.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andreitognolo/improving-vocabulary"
+  },
+  "keywords": [
+    "comics",
+    "improve",
+    "english",
+    "vocabulary"
+  ],
+  "author": "Andrei Tognolo",
+  "bugs": {
+    "url": "https://github.com/andreitognolo/improving-vocabulary/issues"
+  }
+}
