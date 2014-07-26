@@ -18,7 +18,7 @@ exports.stack = function(t){
 
 
 		service.saveTranscription(episode).done(function(){
-			console.log("execution", arguments);
+			t.equal(1, 1);
 			t.start();
 		});
 
