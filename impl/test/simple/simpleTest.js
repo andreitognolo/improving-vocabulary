@@ -12,7 +12,7 @@ exports.stack = function(t){
 		setTimeout(function() {
 			assert.ok( true, "Passed and ready to resume!" );
 			QUnit.start();
-		}, 1000);
+		}, 500);
 	});
 }
 

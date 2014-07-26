@@ -1,4 +1,5 @@
 var t = require( "qunitjs" );
+var tests = require( "./import-tests.js" );
 
 t.log(function( details ) {
     if ( !details.result ) {
@@ -32,13 +33,8 @@ t.testStart(function(details){
    console.log(""); 
 });
 
-var test = [];
-test.push(require("./simple/simpleTest.js"));
-
-
+var test = tests.import(t);
 for(var i = 0; i < test.length; i++){
     test[i].stack(t);
 }
-
-
 t.load();
