@@ -3,7 +3,7 @@ var tests = require( "./import-tests.js" );
 
 t.log(function( details ) {
     if ( !details.result ) {
-        var output = "FAILED: " + ( details.message ? details.message + ", " : "" );
+        var output = "FAILED: " + details.name + " : ";
         if ( details.actual ) {
             output += "expected: " + details.expected + ", actual: " + details.actual;
         }
@@ -15,22 +15,12 @@ t.log(function( details ) {
 });
 
 t.done(function(result){
+    console.log("Failed test: " + result.failed);
+    console.log("Passed test: " + result.passed);
+    console.log("Total: " + result.total);
     if(result.failed){
-        console.log("");
-        console.log("All failed test: " + result.failed);
-        console.log("");
         process.exit(1);
     }
-});
-
-t.moduleStart(function( details ) {
-  console.log( "Now running module: ", details.name );
-});
-
-t.testStart(function(details){
-   console.log("");
-   console.log("Test starting: ", details.name );
-   console.log(""); 
 });
 
 var test = tests.import(t);

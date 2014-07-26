@@ -7,10 +7,8 @@ exports.stack = function(t){
 	});
 
 	t.asyncTest( "asynchronous test: one second later!", function( assert ) {
-		expect( 1 );
-
 		setTimeout(function() {
-			assert.ok( true, "Passed and ready to resume!" );
+			assert.equal( 1, 1);
 			QUnit.start();
 		}, 500);
 	});
