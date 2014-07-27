@@ -106,13 +106,8 @@ exports.find = function(params) {
 exports.save = function(episode) {
 	return {
 		done: function(callback) {
-			require('./MongoHelper').connect(function(db) {
-				var episodes = db.collection('episodes');
-				episodes.update({id: episode.id}, {$set:{transcripted: episode.transcripted}}, {upsert:true, w: 1}, function() {
-					callback();
-					db.close();
-				});
-			});
+			var Storage = require('./Storage');
+			Storage.put(episode).done(callback);
 		}
 	}
 }
