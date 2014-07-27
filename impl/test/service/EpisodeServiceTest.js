@@ -1,6 +1,8 @@
 var HOME = './../..';
 var episodeService = require(HOME + '/server/EpisodeService');
 var Episode = require(HOME + '/server/domain/Episode');
+var MongoHelper = require(HOME + '/server/MongoHelper');
+var Storage = require(HOME + '/server/Storage');
 
 exports.stack = function(t){
 
@@ -18,6 +20,19 @@ exports.stack = function(t){
 				assert.equal(1, episodeRecorded.id);
 				assert.equal(true, episodeRecorded.transcripted);
 				t.start();
+			});
+		});
+	});
+	
+	t.asyncTest('Sync Episodes', function(assert) {
+		// FIXME(Andrei) - Use QUnit.testStart() when travis install mongodb
+		MongoHelper.reset(function() {
+			var files = [19850101, 19850102];
+			episodeService.syncFiles(files, function() {
+				Storage.findById('Episode', 19850102).done(function(episode) {
+					assert.equal(19850102, episode.id);
+					t.start();
+				});
 			});
 		});
 	});

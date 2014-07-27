@@ -54,31 +54,34 @@ exports.sync = function() {
 					return parseInt(value.replace('.gif', ''));
 				});
 
-				var mongoHelper=require('./MongoHelper');
-				mongoHelper.connect(function(db) {
-					var count = 0;
-					files.forEach(function(value) {
-						var episodes = db.collection('episodes');
-						var year = parseInt(value.toString().substring(0, 4));	
-						episodes.update({'id': value}, {$set:{'id': value, 'year': year}}, {upsert:true, w: 1}, function(err, result) {
-							if (err) {
-								throw err;
-							}
-							
-							console.log('UPDATE: ' + value + ' - result: ' + result);
-							count++;
-							
-							if (count == files.length) {
-								db.close();
-							}
-						});
-					});
-				});
-				
-				callback('UPDATING: ' + files.length);
+				exports.syncFiles(files, callback);
 			});
 		}
 	}
+}
+
+exports.syncFiles = function(files, callback) {
+	var mongoHelper=require('./MongoHelper');
+	mongoHelper.connect(function(db) {
+		var count = 0;
+		files.forEach(function(value) {
+			var episodes = db.collection('episodes');
+			var year = parseInt(value.toString().substring(0, 4));	
+			episodes.update({'id': value}, {$set:{'id': value, 'year': year}}, {upsert:true, w: 1}, function(err, result) {
+				if (err) {
+					throw err;
+				}
+				
+				console.log('UPDATE: ' + value + ' - result: ' + result);
+				count++;
+				
+				if (count == files.length) {
+					db.close();
+					callback('UPDATING: ' + files.length);
+				}
+			});
+		});
+	});
 }
 
 exports.find = function(params) {
@@ -93,10 +96,10 @@ exports.find = function(params) {
 				if (params.id) {
 					params.id = parseInt(params.id);
 				}
-				
+
 				episodes.find(params).sort({id:1}).toArray(function(err, result) {
-					callback(JSON.stringify(result));
 					db.close();
+					callback(JSON.stringify(result));
 				});
 			});
 		}

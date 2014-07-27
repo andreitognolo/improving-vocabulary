@@ -14,4 +14,14 @@ function connect(cb) {
 	});
 }
 
+function reset(cb) {
+	connect(function(db) {
+		db.collection('episodes').remove(function() {
+			cb();
+			db.close();
+		});
+	});
+}
+
 exports.connect = connect;
+exports.reset = reset;

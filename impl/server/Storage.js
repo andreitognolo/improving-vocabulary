@@ -1,6 +1,7 @@
 var DOMAIN_DIR = './domain/';
-var entitiesMap = {
-	'EntityTest': 'EntityTest'
+var entityToCollectionMap = {
+	'EntityTest': 'EntityTest',
+	'Episode': 'episodes'
 }
 
 var DomainUtil = require('./domain/DomainUtil');
@@ -36,7 +37,8 @@ exports.put = function(entity) {
 	}
 }
 
-exports.findById = function(collectionName, id) {
+exports.findById = function(entityClass, id) {
+	var collectionName = entityToCollectionMap[entityClass];
 	if (!collectionName || typeof collectionName != 'string') {
 		throw "Collection must be a valid string: '" + collectionName + "'";
 	}
@@ -53,7 +55,6 @@ exports.findById = function(collectionName, id) {
 					// BadSmell - Is this transform really necessary?
 					var resultFromMongo = JSON.parse(JSON.stringify(result))[0];
 					
-					var entityClass = entitiesMap[collectionName];
 					var newEntity	 = require(DOMAIN_DIR + entityClass)['new' + entityClass]();
 
 					for (property in resultFromMongo) {
