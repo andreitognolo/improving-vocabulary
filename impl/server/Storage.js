@@ -50,7 +50,9 @@ exports.findById = function(collectionName, id) {
 					var entityClass = entitiesMap[collectionName];
 					var newEntity	 = require(DOMAIN_DIR + entityClass)['new' + entityClass]();
 
-					newEntity.id = resultFromMongo.id;
+					for (property in resultFromMongo) {
+						newEntity[property] = resultFromMongo[property];
+					}
 					
 					callback(newEntity);
 					db.close();
