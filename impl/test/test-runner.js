@@ -23,8 +23,14 @@ t.done(function(result){
     }
 });
 
-var test = tests.import(t);
-for(var i = 0; i < test.length; i++){
-    test[i].stack(t);
+if (process.argv.length == 3) {
+	console.log('Executing test: ' + process.argv[2]);
+	require(process.argv[2]).stack(t);
+} else {
+	var test = tests.import(t);
+	for(var i = 0; i < test.length; i++){
+		test[i].stack(t);
+	}
 }
+
 t.load();
