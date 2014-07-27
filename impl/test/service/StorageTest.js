@@ -25,12 +25,14 @@ exports.stack = function(t){
 		e.a = 10;
 		e.b = 20;
 		assert.equal(30, e.c);
+		e.list = ['a', 'b'];
 		
 		Storage.put(e).done(function() {
 			Storage.findById('EntityTest', id).done(function(entityFromDatabase) {
 				assert.equal(id, entityFromDatabase.id);
-				assert.equal(30, entityFromDatabase.c);
 				assert.equal('EntityTest', entityFromDatabase.collection);
+				assert.deepEqual(['a', 'b'], entityFromDatabase.list);
+				assert.equal(30, entityFromDatabase.c);
 				t.start();
 			});
 		});

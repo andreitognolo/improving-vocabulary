@@ -4,6 +4,7 @@ function EntityTest() {
 	this.id = undefined;
 	this.a = undefined;
 	this.b = undefined;
+	this.list = [];
 }
 
 EntityTest.prototype = {
