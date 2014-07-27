@@ -1,4 +1,6 @@
 function Episode() {
+
+	this.collection = 'episodes';
 	
 	this.id = undefined;
 	
