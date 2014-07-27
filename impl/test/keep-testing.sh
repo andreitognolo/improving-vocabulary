@@ -8,7 +8,15 @@ fi;
 
 while true
 do
-   ATIME=`stat -c %Z $1`
+   # Expecting changes in any file of previous directory
+   ATIME=0
+   for k in $(find ..|grep -v node_modules|grep -v img); do
+      file_time=$(stat -c %Z $k)
+      if [ $file_time -gt $ATIME ]; then
+         ATIME=$file_time
+      fi
+   done
+	
    if [[ "$ATIME" != "$LTIME" ]]
    then
    		echo "==================================="
