@@ -7,23 +7,14 @@ exports.stack = function(t){
 
 	t.module("StorageTest");
 
-	// FIXME(Andrei) - We should not test Episode
 	t.test('Put - Check collection property', function() {
-		var episode = {};
+		var obj = {};
 		
 		try {
-			Storage.put(episode);
+			Storage.put(obj);
 			t.ok(false, 'We should send an error');
 		} catch (e) {
 			t.ok(true);
-		}
-		
-		episode = Episode.newEpisode();
-		try {
-			Storage.put(episode);
-			t.ok(true);
-		} catch (e) {
-			t.ok(false, 'We should not send an error');
 		}
 	});
 	
@@ -31,10 +22,14 @@ exports.stack = function(t){
 		var id = new Date().getTime();
 		var e = EntityTest.newEntityTest();
 		e.id = id;
+		e.a = 10;
+		e.b = 20;
+		assert.equal(30, e.c);
 		
 		Storage.put(e).done(function() {
 			Storage.findById('EntityTest', id).done(function(entityFromDatabase) {
 				assert.equal(id, entityFromDatabase.id);
+				assert.equal(30, entityFromDatabase.c);
 				assert.equal('EntityTest', entityFromDatabase.collection);
 				t.start();
 			});

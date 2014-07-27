@@ -6,6 +6,12 @@ function EntityTest() {
 	this.b = undefined;
 }
 
+EntityTest.prototype = {
+	get c() {
+		return this.a + this.b;
+	}
+}
+
 exports.newEntityTest = function() {
 	return new EntityTest();
 };

@@ -3,6 +3,8 @@ var entitiesMap = {
 	'EntityTest': 'EntityTest'
 }
 
+var DomainUtil = require('./domain/DomainUtil');
+
 exports.put = function(entity) {
 	if (!entity.collection) {
 		throw 'The entity doesnt have property with name "collection". Entity constructor: ' + entity.constructor.toString();
@@ -10,14 +12,18 @@ exports.put = function(entity) {
 	
 	return {
 		done: function(callback) {
+			var set = {};
+			var properties = DomainUtil.listProperties(entity);
+			properties.forEach(function(property) {
+				set[property] = entity[property];
+			})
+			
 			require('./MongoHelper').connect(function(db) {
 				var collection = db.collection(entity.collection);
 				collection.update({
 					id : entity.id
 				}, {
-					$set : {
-						transcripted : entity.transcripted
-					}
+					$set :set
 				}, {
 					upsert : true,
 					w : 1
