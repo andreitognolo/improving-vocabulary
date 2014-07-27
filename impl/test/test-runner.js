@@ -10,7 +10,7 @@ t.log(function( details ) {
         if ( details.source ) {
             output += "\n" + details.source;
         }
-        console.log( output );
+        console.error( output );
     }
 });
 
