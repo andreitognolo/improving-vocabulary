@@ -3,12 +3,12 @@ var tests = require( "./import-tests.js" );
 
 t.log(function( details ) {
     if ( !details.result ) {
-        var output = "FAILED: " + details.name + " : ";
+        var output = "TEST FAILED: " + details.name;
         if ( details.actual ) {
-            output += "expected: " + details.expected + ", actual: " + details.actual;
+            output += "\nexpected: " + details.expected + ", actual: " + details.actual;
         }
         if ( details.source ) {
-            output += ", " + details.source;
+            output += "\n" + details.source;
         }
         console.log( output );
     }

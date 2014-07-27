@@ -84,7 +84,6 @@ exports.sync = function() {
 exports.find = function(params) {
 	return {
 		done: function(callback) {
-			console.log(params);
 			var mongoHelper = require('./MongoHelper');
 			mongoHelper.connect(function(db) {
 				var episodes = db.collection('episodes');
@@ -97,6 +96,20 @@ exports.find = function(params) {
 				
 				episodes.find(params).sort({id:1}).toArray(function(err, result) {
 					callback(JSON.stringify(result));
+					db.close();
+				});
+			});
+		}
+	}
+}
+
+exports.save = function(episode) {
+	return {
+		done: function(callback) {
+			require('./MongoHelper').connect(function(db) {
+				var episodes = db.collection('episodes');
+				episodes.update({id: episode.id}, {$set:{transcripted: episode.transcripted}}, {upsert:true, w: 1}, function() {
+					callback();
 					db.close();
 				});
 			});
