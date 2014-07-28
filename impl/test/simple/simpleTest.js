@@ -1,7 +1,7 @@
 exports.stack = function(t){
 
-	t.module("simple/simpleTest");
-
+	t.module("simpleTest");
+	
 	t.test('two should equal two', function() {
 		t.equal(2, 2);
 	});

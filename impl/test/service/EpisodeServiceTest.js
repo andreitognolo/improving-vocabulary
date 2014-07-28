@@ -1,13 +1,14 @@
 var HOME = './../..';
 var episodeService = require(HOME + '/server/EpisodeService');
 var Episode = require(HOME + '/server/domain/Episode');
-var MongoHelper = require(HOME + '/server/MongoHelper');
 var Storage = require(HOME + '/server/Storage');
+var MongoHelper = require(HOME + '/server/MongoHelper');
+
 
 exports.stack = function(t){
 
 	t.module("EpisodeServiceTest");
-
+	
 	t.asyncTest('Save Episode', function(assert) {
 		var episode = new Episode.newEpisode();
 		episode.id = 1;
@@ -25,9 +26,9 @@ exports.stack = function(t){
 	});
 	
 	t.asyncTest('Sync Episodes', function(assert) {
-		// FIXME(Andrei) - Use QUnit.testStart() when travis install mongodb
-		MongoHelper.reset(function() {
-			var files = [19850101, 19850102];
+		var files = [19850101, 19850102];
+		Storage.findById('Episode', 19850102).done(function(episodeNotFound) {
+			ok(!episodeNotFound.id);
 			episodeService.syncFiles(files, function() {
 				Storage.findById('Episode', 19850102).done(function(episode) {
 					assert.equal(19850102, episode.id);
