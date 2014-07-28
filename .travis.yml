@@ -5,7 +5,7 @@ node_js:
 install: cd impl; npm install;
 before_script:
   - sleep 15
-  - mongo mydb_test --eval 'db.addUser("admin", "4nVL27YyApru");'
+  - mongo improveyourvocabulary --eval 'db.addUser("admin", "4nVL27YyApru");'
 script: cd impl/; npm test;
 services:
   - mongodb
