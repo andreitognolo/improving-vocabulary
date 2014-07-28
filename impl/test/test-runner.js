@@ -1,5 +1,7 @@
+var HOME = './../';
 var t = require( "qunitjs" );
 var tests = require( "./import-tests.js" );
+var MongoHelper = require(HOME + '/server/MongoHelper');
 
 t.log(function( details ) {
     if ( !details.result ) {
@@ -23,13 +25,20 @@ t.done(function(result){
     }
 });
 
+t.testStart(function(){
+    t.stop();
+    MongoHelper.reset(function(){
+        t.start();
+    })
+})
+
 if (process.argv.length == 3) {
 	console.log('Executing test: ' + process.argv[2]);
 	require(process.argv[2]).stack(t);
 } else {
 	var test = tests.import(t);
 	for(var i = 0; i < test.length; i++){
-		test[i].stack(t);
+		require(test[i]).stack(t);
 	}
 }
 

@@ -1,13 +1,14 @@
 var HOME = './../..';
 var episodeService = require(HOME + '/server/EpisodeService');
 var Episode = require(HOME + '/server/domain/Episode');
-var MongoHelper = require(HOME + '/server/MongoHelper');
 var Storage = require(HOME + '/server/Storage');
+var MongoHelper = require(HOME + '/server/MongoHelper');
+
 
 exports.stack = function(t){
 
 	t.module("EpisodeServiceTest");
-
+	
 	t.asyncTest('Save Episode', function(assert) {
 		var episode = new Episode.newEpisode();
 		episode.id = 1;
@@ -26,21 +27,19 @@ exports.stack = function(t){
 	
 	t.asyncTest('Sync Episodes', function(assert) {
 		// FIXME(Andrei) - Use QUnit.testStart() when travis install mongodb
-		MongoHelper.reset(function() {
-			var episode = Episode.newEpisode();
-			episode.id = 19851119;
-			// FIXME(Andrei) - addSentence method?
-			episode.sentences = [{'character': 'Calvin', 'sentence': 'teste'}];
-			episodeService.save(episode).done(function() {
-				var files = [19851118, 19851119];
-				episodeService.syncFiles(files, function() {
-					Storage.findById('Episode', 19851119).done(function(episodeFromDB) {
-						assert.equal(19851119, episodeFromDB.id);
-						assert.equal(1, episodeFromDB.sentences.length);
-						t.start();
-					});
+		var episode = Episode.newEpisode();
+		episode.id = 19851119;
+		// FIXME(Andrei) - addSentence method?
+		episode.sentences = [{'character': 'Calvin', 'sentence': 'teste'}];
+		episodeService.save(episode).done(function() {
+			var files = [19851118, 19851119];
+			episodeService.syncFiles(files, function() {
+				Storage.findById('Episode', 19851119).done(function(episodeFromDB) {
+					assert.equal(19851119, episodeFromDB.id);
+					assert.equal(1, episodeFromDB.sentences.length);
+					t.start();
 				});
-			})
+			});
 		});
 	});
 }
