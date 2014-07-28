@@ -2,8 +2,8 @@ language: node_js
 node_js:
   - "0.11"
   - "0.10"
-install: install.sh;
-before_script: before_script.sh
-script: script.sh;
+install: cmds/ci/install.sh;
+before_script: cmds/ci/before_script.sh
+script: cmds/ci/script.sh;
 services:
   - mongodb
