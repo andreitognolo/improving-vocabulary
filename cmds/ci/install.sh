@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 FOLDER=`pwd | grep impl`
 
 if [ "x$FOLDER" == "x" ]; then
