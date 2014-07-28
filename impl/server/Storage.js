@@ -38,6 +38,7 @@ exports.put = function(entity) {
 }
 
 exports.findById = function(entityClass, id) {
+	// FIXME(Andrei) - We dont need this map
 	var collectionName = entityToCollectionMap[entityClass];
 	if (!collectionName || typeof collectionName != 'string') {
 		throw "Collection must be a valid string: '" + collectionName + "'";

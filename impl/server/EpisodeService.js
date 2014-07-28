@@ -61,22 +61,24 @@ exports.sync = function() {
 }
 
 exports.syncFiles = function(files, callback) {
-	var mongoHelper=require('./MongoHelper');
-	mongoHelper.connect(function(db) {
-		var count = 0;
-		files.forEach(function(value) {
-			var episodes = db.collection('episodes');
+	var Storage = require('./Storage');
+	var mongoHelper = require('./MongoHelper');
+	var Episode = require('./domain/Episode');
+	var count = 0;
+	files.forEach(function(value) {
+		Storage.findById('Episode', value).done(function(episode) {
 			var year = parseInt(value.toString().substring(0, 4));	
-			episodes.update({'id': value}, {$set:{'id': value, 'year': year}}, {upsert:true, w: 1}, function(err, result) {
-				if (err) {
-					throw err;
-				}
-				
+			if (!episode) {
+				episode = Episode.newEpisode();
+			}
+			
+			episode.id = value;
+			episode.year = year;
+			Storage.put(episode).done(function(result) {
 				console.log('UPDATE: ' + value + ' - result: ' + result);
 				count++;
 				
 				if (count == files.length) {
-					db.close();
 					callback('UPDATING: ' + files.length);
 				}
 			});
