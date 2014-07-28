@@ -27,13 +27,20 @@ exports.stack = function(t){
 	t.asyncTest('Sync Episodes', function(assert) {
 		// FIXME(Andrei) - Use QUnit.testStart() when travis install mongodb
 		MongoHelper.reset(function() {
-			var files = [19850101, 19850102];
-			episodeService.syncFiles(files, function() {
-				Storage.findById('Episode', 19850102).done(function(episode) {
-					assert.equal(19850102, episode.id);
-					t.start();
+			var episode = Episode.newEpisode();
+			episode.id = 19850102;
+			// FIXME(Andrei) - addSentence method?
+			episode.sentences = [{'character': 'Calvin', 'sentence': 'teste'}];
+			episodeService.save(episode).done(function() {
+				var files = [19850101, 19850102];
+				episodeService.syncFiles(files, function() {
+					Storage.findById('Episode', 19850102).done(function(episodeFromDB) {
+						assert.equal(19850102, episodeFromDB.id);
+						assert.equal(1, episodeFromDB.sentences.length);
+						t.start();
+					});
 				});
-			});
+			})
 		});
 	});
 }
