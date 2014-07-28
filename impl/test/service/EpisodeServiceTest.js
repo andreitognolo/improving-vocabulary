@@ -26,13 +26,20 @@ exports.stack = function(t){
 	});
 	
 	t.asyncTest('Sync Episodes', function(assert) {
-		var files = [19850101, 19850102];
+		var episode = Episode.newEpisode();
+		episode.id = 19850102;
+		// FIXME(Andrei) - addSentence method?
+		episode.sentences = [{'character': 'Calvin', 'sentence': 'teste'}];
 		Storage.findById('Episode', 19850102).done(function(episodeNotFound) {
 			ok(!episodeNotFound.id);
-			episodeService.syncFiles(files, function() {
-				Storage.findById('Episode', 19850102).done(function(episode) {
-					assert.equal(19850102, episode.id);
-					t.start();
+			episodeService.save(episode).done(function() {
+				var files = [19850101, 19850102];
+				episodeService.syncFiles(files, function() {
+					Storage.findById('Episode', 19850102).done(function(episodeFromDB) {
+						assert.equal(19850102, episodeFromDB.id);
+						assert.equal(1, episodeFromDB.sentences.length);
+						t.start();
+					});
 				});
 			});
 		});
