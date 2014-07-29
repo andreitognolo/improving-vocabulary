@@ -7,6 +7,9 @@ exports.stack = function(t) {
 	
 	t.test('Split', function() {
 		var words = WordsUtil.words('a bb ccc');
-		t.equal(3, words.length);
+		t.deepEqual(['a', 'bb', 'ccc'], words);
+		
+		words = WordsUtil.words('a! bb? cc\'c');
+		t.deepEqual(['a', 'bb', 'ccc'], words);
 	});
 }
