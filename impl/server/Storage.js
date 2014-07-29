@@ -17,7 +17,11 @@ exports.put = function(entity) {
 			var properties = DomainUtil.listProperties(entity);
 			properties.forEach(function(property) {
 				set[property] = entity[property];
-			})
+			});
+			
+			if (set.id == 19851118) {
+				console.log('set', set);
+			}
 			
 			require('./MongoHelper').connect(function(db) {
 				var collection = db.collection(entity.collection);

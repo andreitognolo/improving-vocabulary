@@ -30,13 +30,16 @@ exports.stack = function(t){
 		var episode = Episode.newEpisode();
 		episode.id = 19851119;
 		// FIXME(Andrei) - addSentence method?
-		episode.sentences = [{'character': 'Calvin', 'sentence': 'teste'}];
+		episode.sentences = [{'character': 'Calvin', 'sentence': 'aaaa bbbb ccc''}];
+		
 		episodeService.save(episode).done(function() {
 			var files = [19851118, 19851119];
 			episodeService.syncFiles(files, function() {
 				Storage.findById('Episode', 19851119).done(function(episodeFromDB) {
 					assert.equal(19851119, episodeFromDB.id);
-					assert.equal(1, episodeFromDB.sentences.length);
+					assert.equal(2, episodeFromDB.sentences.length);
+					assert.deepEqual(['aaaa', 'bbbb', 'ccc'], episodeFromDB.words);
+					assert.ok(episodeFromDB.words.length > 5);
 					t.start();
 				});
 			});
