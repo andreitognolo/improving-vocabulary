@@ -19,10 +19,6 @@ exports.put = function(entity) {
 				set[property] = entity[property];
 			});
 			
-			if (set.id == 19851118) {
-				console.log('set', set);
-			}
-			
 			require('./MongoHelper').connect(function(db) {
 				var collection = db.collection(entity.collection);
 				collection.update({
@@ -36,7 +32,7 @@ exports.put = function(entity) {
 					db.close();
 					
 					// FIXME(Andrei) - Jesus Christ! Look at this mess! (why this work?)
-					require('./MongoHelper').connect(function(db) {
+					require('./MongoHelper').connect(function(db2) {
 						var setWords = {words: entity.words};
 						var collection = db.collection(entity.collection);
 						collection.update({
@@ -47,6 +43,7 @@ exports.put = function(entity) {
 							upsert : true,
 							w : 1
 						}, function() {
+							db2.close();
 							callback();
 						});
 					});
