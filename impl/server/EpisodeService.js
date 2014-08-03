@@ -39,20 +39,24 @@ exports.saveTranscription = function(episode) {
 	}
 }
 
-exports.sync = function() {
+exports.sync = function(episodeId) {
 	var fs = require("fs");
 	
 	return {
 		done : function(callback) {
 			fs.readdir('img/calvin-hobbes', function(err, files) {
 				if (err) {
-					console.log('Erro: ' + err);
 					throw 'Error: ' + err;
 				}
-				
-				files = files.map(function(value) {
-					return parseInt(value.replace('.gif', ''));
-				});
+
+				console.log('episodeId', episodeId);
+				if (episodeId) {
+					files = [episodeId];
+				} else {
+					files = files.map(function(value) {
+						return parseInt(value.replace('.gif', ''));
+					});
+				}
 
 				exports.syncFiles(files, callback);
 			});

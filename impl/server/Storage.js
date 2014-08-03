@@ -33,8 +33,23 @@ exports.put = function(entity) {
 					upsert : true,
 					w : 1
 				}, function() {
-					callback();
 					db.close();
+					
+					// FIXME(Andrei) - Jesus Christ! Look at this mess! (why this work?)
+					require('./MongoHelper').connect(function(db) {
+						var setWords = {words: entity.words};
+						var collection = db.collection(entity.collection);
+						collection.update({
+							id : entity.id
+						}, {
+							$set :setWords
+						}, {
+							upsert : true,
+							w : 1
+						}, function() {
+							callback();
+						});
+					});
 				});
 			});
 		}
