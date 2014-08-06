@@ -1,67 +1,81 @@
-<section class="page">
-	<section>
-		<div class="episode"></div>
-		
-		<div class="sentences"></div>
-		<div class="episode-navigation">
-			<button type="button" class="previous btn btn-success">Anterior</button>
-			<button type="button" class="next btn btn-success">Proxima</button>
-		</div>
-		
-		<div>
-			<button type="button" class="transcription btn btn-primary">Transcription</button>
-		</div>
+<section class="windfury">
+	<section class="episode">
+        <div>
+            <div class="episode"></div>
+
+            <div class="sentences"></div>
+            <div class="episode-navigation">
+                <button type="button" class="previous btn btn-success">Anterior</button>
+                <button type="button" class="next btn btn-success">Proxima</button>
+            </div>
+
+            <div>
+                <button type="button" class="transcription btn btn-primary">Transcription</button>
+            </div>
+        </div>
 	</section>
 	
 	<script>
-		(function open() {
-			var episodeId = querystring().get('episodeId');
-			
-			function clickNext() {
-				if (!episodeId) {
-					episodeId = 1;
-				}
-					
-				$.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
-					location = location.href.split('?')[0] + '?episodeId=' + episode.id;
-				});
-			}
-			
-			function clickPrevious() {
-				
-			}
-			
-			function clickTranscription() {
-				location.hash = "#Transcription?id=" + episodeId;
-			}
-			
-			if (!episodeId) {
-				next();
-				return;
-			}
-			$('.episode').html('');
-			$.post('/s/Episode/find', JSON.stringify({id: episodeId}), function(episodes) {
-				var episode = episodes[0];
-				$('.episode').append($('<img src="img/calvin-hobbes/' + episode.id + '.gif" />'));
-				
-				if (episode.sentences) {
-					episode.sentences.forEach(function(sentence) {
-						console.log(sentence);
-						var p = $('<p>');
-						var character = sentence.character;
-						var sentence = sentence.sentence;
-						p.html('<strong>' + character + '</strong>: ' + sentence);
-						
-						$('.sentences').append(p);
-					});
-				} else {
-					$.warning('Esse episodio ainda nao foi transcrito!', 10000);
-				}
-				
-				$('.next').click(clickNext);
-				$('.previous').click(clickPrevious);
-				$('.transcription').click(clickTranscription);
-			});
-		})();
+        (function($, wf){
+            $.wf(['template/base.html'], function(base){
+                var tPage = wf.doT(".episode");
+                
+                function open(){
+                    base.open(tPage);
+                    
+                    var episodeId = querystring().get('episodeId');
+
+                    function clickNext() {
+                        if (!episodeId) {
+                            episodeId = 1;
+                        }
+
+                        $.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
+                            location = location.href.split('?')[0] + '?episodeId=' + episode.id;
+                        });
+                    }
+
+                    function clickPrevious() {
+
+                    }
+
+                    function clickTranscription() {
+                        location.hash = "#Transcription?id=" + episodeId;
+                    }
+                    
+                    if (!episodeId) {
+                        next();
+                        return;
+                    }
+                    
+                    $('.episode').html('');
+                    $.post('/s/Episode/find', JSON.stringify({id: episodeId}), function(episodes) {
+                        var episode = episodes[0];
+                        $('.episode').append($('<img src="img/calvin-hobbes/' + episode.id + '.gif" />'));
+
+                        if (episode.sentences) {
+                            episode.sentences.forEach(function(sentence) {
+                                console.log(sentence);
+                                var p = $('<p/>');
+                                var character = sentence.character;
+                                var sentence = sentence.sentence;
+                                p.html('<strong>' + character + '</strong>: ' + sentence);
+
+                                $('.sentences').append(p);
+                            });
+                        } else {
+                            $.warning('Esse episodio ainda nao foi transcrito!', 10000);
+                        }
+
+                        $('.next').click(clickNext);
+                        $('.previous').click(clickPrevious);
+                        $('.transcription').click(clickTranscription);
+                    });
+                }
+                wf.def({
+                    open : open
+                });
+            });
+        })(jQuery, windfury);
 	</script>
 </section>

@@ -1,108 +1,115 @@
-<section class="page">
-	<section class="transcription">
-		<div class="episode"></div>
+<section class="windfury">
+    <section class="transcription">
+        <section class="transcription">
+            <div class="episode"></div>
 
-		<form class="form-inline" role="form">
-		</form>
+            <form class="form-inline" role="form">
+            </form>
 
-		<div>
-			<button type="button" class="save btn btn-success">Salvar</button>
-		</div>
-	</section>
-	
-	<section class="template">
-		<div class="new-sentence">
-			<div class="form-group">
-				<select id="character" class="character form-control">
-					<option value="CHOOSE">Escolha o personagem...</option>
-					<option value="CALVIN">Calvin</option>
-					<option value="HOBBES">Hobbes</option>
-					<option value="PAI">Pai</option>
-					<option value="MAE">Mae</option>
-					<option value="SUSY">Susy</option>
-					<option value="PROFESSORA">Professora</option>
-					<option value="OTHER">Outros</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label class="sr-only" for="sentence">Fala</label> <input
-					type="text" id="sentence" class="sentence form-control"
-					placeholder="Digite aqui a fala do personagem">
-			</div>
-			<div class="form-group">
-				<button type="submit" class="add btn btn-primary">Adicionar</button>
-			</div>
-		</div>
-	</section>
+            <div>
+                <button type="button" class="save btn btn-success">Salvar</button>
+            </div>
+        </section>
 
+        <section class="template">
+            <div class="new-sentence">
+                <div class="form-group">
+                    <select id="character" class="character form-control">
+                        <option value="CHOOSE">Escolha o personagem...</option>
+                        <option value="CALVIN">Calvin</option>
+                        <option value="HOBBES">Hobbes</option>
+                        <option value="PAI">Pai</option>
+                        <option value="MAE">Mae</option>
+                        <option value="SUSY">Susy</option>
+                        <option value="PROFESSORA">Professora</option>
+                        <option value="OTHER">Outros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="sentence">Fala</label> 
+                    <input type="text" id="sentence" class="sentence form-control"
+                        placeholder="Digite aqui a fala do personagem"/>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="add btn btn-primary">Adicionar</button>
+                </div>
+            </div>
+        </section>
+    </section>
 	<script>
-		(function open() {
-			function show() {
-				$('.episode').html('');
-	
-				var id = querystring().get('id');
-				if (!id) {
-					$.get('/s/Episode/nextTranscription', function(id) {
-						location.hash = "#Transcription?id=" + id;
-					});
-					return;
-				}
-				
-				$('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
-				
-				$.get('/s/Episode/find?data={"id": ' + id + '}', function(episodes) {
-					var episode = episodes[0];
-					if (episode.sentences && episode.sentences.length) {
-						episode.sentences.forEach(function(sentence) {
-							newSentence();
-							$('.form-inline .new-sentence:last select').val(sentence.character);
-							$('.form-inline .new-sentence:last input').val(sentence.sentence);
-						});
-					} else {
-						newSentence();
-					}
-				});
-				
-				$('.save').click(function() {
-					var sentences = [];
-					
-					$('.form-inline .new-sentence').each(function() {
-						var character = $(this).find('select').val();
-						var sentence = $(this).find('input').val();
-						
-						if (character == 'CHOOSE' && !sentence) {
-							return;
-						}
-						
-						sentences.push({
-							'character' : character,
-							'sentence' : sentence
-						});
-					});
+        (function($, wf){
+            $.wf(['template/base.html'], function(base){
+                var tTrans = wf.doT(".transcription");
+                function open() {
+                    base.open(tTrans);
+                    $('.episode').html('');
 
-					var episode = {
-						id : id,
-						sentences : sentences
-					}
+                    var id = querystring().get('id');
+                    if (!id) {
+                        $.get('/s/Episode/nextTranscription', function(id) {
+                            location.hash = "#Transcription?id=" + id;
+                        });
+                        return;
+                    }
 
-					$.post('/s/Episode/saveTranscription', JSON.stringify(episode)).complete(function(result) {
-						$.success('Episodio salvo com sucesso');
-						location.hash = "#Episode?episodeId=" + id;
-					});
-				});
-			}
-			
-			function newSentence() {
-				$('.form-inline .add').remove();
-				$('.template .new-sentence').clone().appendTo('.form-inline');
-				
-				$('.form-inline .add').click(function() {
-					newSentence();
-					return false;
-				});
-			}
-			
-			show();
-		})();
+                    $('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
+
+                    $.get('/s/Episode/find?data={"id": ' + id + '}', function(episodes) {
+                        var episode = episodes[0];
+                        if ($.opand(episode.sentences , episode.sentences.length)) {
+                            episode.sentences.forEach(function(sentence) {
+                                newSentence();
+                                $('.form-inline .new-sentence:last select').val(sentence.character);
+                                $('.form-inline .new-sentence:last input').val(sentence.sentence);
+                            });
+                        } else {
+                            newSentence();
+                        }
+                    });
+
+                    $('.save').click(function() {
+                        var sentences = [];
+
+                        $('.form-inline .new-sentence').each(function() {
+                            var character = $(this).find('select').val();
+                            var sentence = $(this).find('input').val();
+
+                            if ($.opand(character == 'CHOOSE' , !sentence)) {
+                                return;
+                            }
+
+                            sentences.push({
+                                'character' : character,
+                                'sentence' : sentence
+                            });
+                        });
+
+                        var episode = {
+                            id : id,
+                            sentences : sentences
+                        }
+
+                        $.post('/s/Episode/saveTranscription', JSON.stringify(episode)).complete(function(result) {
+                            $.success('Episodio salvo com sucesso');
+                            location.hash = "#Episode?episodeId=" + id;
+                        });
+                    });
+                }
+
+                function newSentence() {
+                    $('.form-inline .add').remove();
+                    $('.template .new-sentence').clone().appendTo('.form-inline');
+
+                    $('.form-inline .add').click(function() {
+                        newSentence();
+                        return false;
+                    });
+                }
+
+                wf.def({
+                    open : open
+                });
+            });
+        })(jQuery, windfury);
 	</script>
 </section>

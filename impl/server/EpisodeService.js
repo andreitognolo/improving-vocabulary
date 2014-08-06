@@ -120,3 +120,13 @@ exports.save = function(episode) {
 		}
 	}
 }
+
+exports.reset = function(){
+    return {
+        done : function(){
+           var mongoHelper = require('./MongoHelper');
+            mongoHelper.reset(function(db){
+            });
+        }
+    }
+}

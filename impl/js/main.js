@@ -8,14 +8,9 @@
 		}
 		hash = hash.substring(1);
 		var page = hash.split('?')[0];
-
-		$.ajax({
-		    url : 'pages/' + page + '.html',
-		    dataType : 'html',
-		    success : function(text) {
-		    	$('.content').html($(text).html());
-		    }
-		});
+        $.wf('pages/' + page + '.html', function(p){
+            p.open();
+        });
 	});
 	
 	$(window).hashchange();
