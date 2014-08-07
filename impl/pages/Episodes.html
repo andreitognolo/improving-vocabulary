@@ -7,57 +7,63 @@
                 <option value="1987">1987</option>
             </select>
 
-            <div class="list"></div>
+            <div class="list">
+                
+            </div>
         </div>
 	</section>
+    
+    <section class="list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Acao</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{~it : episode}}
+                <tr>
+                    <td>{{!episode.id}}</td>
+                    {{?episode.transcripted}}
+                        <td><a href="#Episode?episodeId='{{!episode.id}}'">Ver</a></td>
+                    {{??}}
+                        <td><a href="#Transcription?episodeId='{{!episode.id}}'">Transcrever</a></td>
+                    {{?}}
+                </tr>
+                {{~}}
+            </tbody>
+        </table>
+    </section>
 
 	<script>
         (function($, wf){
             $.wf(['template/base.html'], function(base){
-                var page = wf.doT(".episodes");
+                var tPage = wf.doT(".episodes");
+                var tList = wf.doT(".list");
                 
                 function open(){
-
-                    function list() {
-                        var year = querystring().get('year');
-                        if (!year) {
-                            year = $('.years option:selected').val();
-                        }
-                        
-                        $.post('/s/Episode/find', JSON.stringify({
-                            "year" : year
-                        }), function(result) {
-                            var table = $('<table/>');
-                            var header = '<tr><th>ID</th><th>Acao</th></tr>';
-                            table.append(header);
-
-                            result.forEach(function(episode) {
-                                var id = '<td>' + episode.id + '</td>';
-
-                                var acao;
-                                if (episode.transcripted) {
-                                    acao = '<td><a href="#Episode?episodeId=' + episode.id + '">Ver</a></td>';
-                                } else {
-                                    acao = '<td><a href="#Transcription?id=' + episode.id + '">Transcrever</a></td>';
-                                }
-
-                                table.append('<tr>' + id + acao + '</tr>');
-                            });
-
-                            $('.list').html(table);
-                        });
+                    var page = $(tPage());
+                    var year = querystring().get('year');
+                    
+                    base.open(page);
+                   
+                    if (year) {
+                       page.find('.years').val(year);
                     }
                     
-                    base.open(page());
-                    var year = querystring().get('year');
-                    if (year) {
-                        $('.years').val(year);
+                    if (!year) {
+                        year = $('.years option:selected').val();
                     }
 
-                    list();
-
-                    $('select.years').change(function() {
-                        location.hash = "#Episodes?year=" + $('.years option:selected').val();
+                    $.post('/s/Episode/find', JSON.stringify({
+                        "year" : year
+                    }), function(result) {
+                        page.find('.list').html(tList(result));
+                    });
+                    
+                    page.find('select.years').change(function() {
+                        location.hash = "#Episodes?year=" + page.find('.years option:selected').val();
                     });
                     
                 }
