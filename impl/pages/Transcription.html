@@ -1,6 +1,6 @@
 <section class="windfury">
     <section class="transcription">
-        <section class="transcription">
+        <div>
             <div class="episode"></div>
 
             <form class="form-inline" role="form">
@@ -9,9 +9,10 @@
             <div>
                 <button type="button" class="save btn btn-success">Salvar</button>
             </div>
-        </section>
-
-        <section class="template">
+        </div>
+    </section>
+    
+     <section class="new-sentence">
             <div class="new-sentence">
                 <div class="form-group">
                     <select id="character" class="character form-control">
@@ -34,15 +35,18 @@
                     <button type="submit" class="add btn btn-primary">Adicionar</button>
                 </div>
             </div>
-        </section>
     </section>
+    
 	<script>
         (function($, wf){
             $.wf(['template/base.html'], function(base){
+                
                 var tTrans = wf.doT(".transcription");
+                var tNewSentence = wf.doT(".new-sentence");
+                
                 function open() {
-                    base.open(tTrans);
-                    $('.episode').html('');
+                    var page  = $(tTrans());
+                    base.open(page);
 
                     var id = querystring().get('id');
                     if (!id) {
@@ -52,25 +56,30 @@
                         return;
                     }
 
-                    $('.episode').append($('<img src="img/calvin-hobbes/' + id + '.gif" />'));
+                    page.find('.episode').html('<img src="img/calvin-hobbes/' + id + '.gif" />');
+                    
+                    page.find('.form-inline').submit(function() {
+                        newSentence();
+                        return false;
+                    });
 
                     $.get('/s/Episode/find?data={"id": ' + id + '}', function(episodes) {
                         var episode = episodes[0];
                         if ($.opand(episode.sentences , episode.sentences.length)) {
                             episode.sentences.forEach(function(sentence) {
                                 newSentence();
-                                $('.form-inline .new-sentence:last select').val(sentence.character);
-                                $('.form-inline .new-sentence:last input').val(sentence.sentence);
+                                page.find('.form-inline .new-sentence:last select').val(sentence.character);
+                                page.find('.form-inline .new-sentence:last input').val(sentence.sentence);
                             });
                         } else {
                             newSentence();
                         }
                     });
 
-                    $('.save').click(function() {
+                    page.find('.save').click(function() {
                         var sentences = [];
 
-                        $('.form-inline .new-sentence').each(function() {
+                        page.find('.form-inline .new-sentence').each(function() {
                             var character = $(this).find('select').val();
                             var sentence = $(this).find('input').val();
 
@@ -94,16 +103,18 @@
                             location.hash = "#Episode?episodeId=" + id;
                         });
                     });
-                }
-
-                function newSentence() {
-                    $('.form-inline .add').remove();
-                    $('.template .new-sentence').clone().appendTo('.form-inline');
-
-                    $('.form-inline .add').click(function() {
-                        newSentence();
-                        return false;
-                    });
+                    
+                    function newSentence() {
+                        var input = page.find('.form-inline .new-sentence:last input');
+                        if(input.length != 0){
+                            if(input.val().trim() == ""){
+                                return;
+                            }
+                        }
+                        
+                        page.find('.form-inline .add').remove();
+                        page.find('.form-inline').append(tNewSentence());
+                    }
                 }
 
                 wf.def({
