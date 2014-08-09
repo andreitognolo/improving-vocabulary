@@ -1,5 +1,6 @@
 <section class="windfury">
-	<section class="episode">
+	
+    <section class="episode">
         <div>
             <div class="episode"></div>
 
@@ -14,14 +15,22 @@
             </div>
         </div>
 	</section>
-	
+    
+    <section class="sentence">
+        {{~it : sentence}}
+            <p><strong>{{!sentence.character}}</strong>: {{!sentence.sentence}}</p>
+        {{~}}
+    </section>
+    
 	<script>
         (function($, wf){
             $.wf(['template/base.html'], function(base){
                 var tPage = wf.doT(".episode");
+                var tSentence = wf.doT(".sentence");
                 
                 function open(){
-                    base.open(tPage);
+                    var page = $(tPage())
+                    base.open(page);
                     
                     var episodeId = querystring().get('episodeId');
 
@@ -31,7 +40,7 @@
                         }
 
                         $.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
-                            location = location.href.split('?')[0] + '?episodeId=' + episode.id;
+                            location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
                         });
                     }
 
@@ -48,30 +57,22 @@
                         return;
                     }
                     
-                    $('.episode').html('');
                     $.post('/s/Episode/find', JSON.stringify({id: episodeId}), function(episodes) {
                         var episode = episodes[0];
-                        $('.episode').append($('<img src="img/calvin-hobbes/' + episode.id + '.gif" />'));
+                        page.find('.episode').html('<img src="img/calvin-hobbes/' + episode.id + '.gif" />');
 
                         if (episode.sentences) {
-                            episode.sentences.forEach(function(sentence) {
-                                console.log(sentence);
-                                var p = $('<p/>');
-                                var character = sentence.character;
-                                var sentence = sentence.sentence;
-                                p.html('<strong>' + character + '</strong>: ' + sentence);
-
-                                $('.sentences').append(p);
-                            });
+                           page.find('.sentences').html(tSentence(episode.sentences));
                         } else {
                             $.warning('Esse episodio ainda nao foi transcrito!', 10000);
                         }
 
-                        $('.next').click(clickNext);
-                        $('.previous').click(clickPrevious);
-                        $('.transcription').click(clickTranscription);
+                        page.find('.next').click(clickNext);
+                        page.find('.previous').click(clickPrevious);
+                        page.find('.transcription').click(clickTranscription);
                     });
                 }
+                
                 wf.def({
                     open : open
                 });
