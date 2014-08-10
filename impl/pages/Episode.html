@@ -57,7 +57,8 @@
                         return;
                     }
                     
-                    $.post('/s/Episode/find', JSON.stringify({id: episodeId}), function(episodes) {
+                    var data = {id:episodeId};
+                    $.iyvc.findEpisodes(data, function(episodes){
                         var episode = episodes[0];
                         page.find('.episode').html('<img src="img/calvin-hobbes/' + episode.id + '.gif" />');
 
