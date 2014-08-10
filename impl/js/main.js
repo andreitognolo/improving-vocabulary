@@ -13,6 +13,11 @@
         });
 	});
 	
+    $('.navbar-nav li a').click(function(){
+        $('.navbar-nav li').removeClass('active');
+        $(this).closest('li').addClass('active'); 
+    });
+    
 	$(window).hashchange();
 	
 })(jQuery);
