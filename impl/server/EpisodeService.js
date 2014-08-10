@@ -29,12 +29,12 @@ exports.nextTranscription = function() {
 exports.saveTranscription = function(episode) {
 	return {
 		done: function(callback) {
-			require('./MongoHelper').connect(function(db) {
-				var episodes = db.collection('episodes');
-				episodes.update({id: parseInt(episode.id)}, {$set:{transcripted: true, sentences: episode.sentences}}, function() {
-					callback();
-				});
-			});
+            var Episode = require('./domain/Episode');
+            var obj = new Episode.newEpisode();
+            obj.id = parseInt(episode.id);
+            obj.transcripted = true;
+            obj.sentences = episode.sentences;
+            exports.save(obj).done(callback);
 		}
 	}
 }

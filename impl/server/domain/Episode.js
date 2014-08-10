@@ -1,6 +1,6 @@
 function Episode() {
 
-	this.collection = 'episodes';
+    this.collection = 'episodes';
 	
 	this.id = undefined;
 	
