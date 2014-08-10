@@ -29,5 +29,17 @@
 		}
 		return json;
 	}
+    
+    $.objectToFormParam = function(param) {
+		var array = [];
+		for ( var i in param) {
+			if (typeof (param[i]) == 'object') {
+				param[i] = JSON.stringify(param[i]);
+				param[i] = encodeURIComponent(param[i]);
+			}
+			array.push(i + "=" + param[i]);
+		}
+		return array.join("&");
+	}
 
 })(jQuery);

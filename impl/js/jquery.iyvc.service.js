@@ -23,10 +23,19 @@
             url : url,
             success : callbackSuccess(success),
             error : callbackError(error),
-            data : JSON.stringify(data),
             type: type,
             dataType: "json",
             contentType : "application/json"
+        }
+        
+        if (data !== null) {
+            opts.contentType = 'application/json;charset=UTF-8';
+            opts.dataType = "json";
+            if (opts.type == "GET") {
+                opts.data = $.objectToFormParam(data);
+            } else {
+                opts.data = JSON.stringify(data);
+            }
         }
         
         return $.ajax(opts);   
@@ -37,6 +46,8 @@
            return ajax(type, url, data, success, error);
         }
     }
+    
+
     
     mount("Procurando Episodios", "findEpisodes", "POST", "/s/Episode/find");
     mount("Proximo Episodio", "nextEpisode", "POST", "/s/Episode/next");
