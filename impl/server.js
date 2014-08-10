@@ -12,7 +12,7 @@ var EpisodeService = require('./server/EpisodeService.js');
 function processStatic(uri, request, response) {
 	var filename = path.join(process.cwd(), uri);
 
-	path.exists(filename, function(exists) {
+	fs.exists(filename, function(exists) {
 		if (!exists) {
 			response.writeHead(404, {
 				"Content-Type" : "text/plain"

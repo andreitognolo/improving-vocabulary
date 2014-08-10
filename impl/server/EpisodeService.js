@@ -126,6 +126,7 @@ exports.reset = function(){
         done : function(){
            var mongoHelper = require('./MongoHelper');
             mongoHelper.reset(function(db){
+                db.close();
             });
         }
     }
