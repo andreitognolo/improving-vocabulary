@@ -21,7 +21,7 @@
             <div class="paragraph">
                 <div class="bold">{{!sentence.character}}:</div> 
                 {{~sentence.splited : splited}}
-                    <div class="sentence">{{!splited}}</div>
+                    <div class="word">{{!splited}}</div>
                 {{~}}
             </div>
         {{~}}
@@ -79,7 +79,7 @@
                         if (episode.sentences) {
                            episode = splitSentence(episode);
                            page.find('.sentences').html(tSentence(episode.sentences));
-                           page.find('.sentence').click(function(){
+                           page.find('.word').click(function(){
                                 if($(this).hasClass('selected')){
                                     $(this).removeClass('selected');
                                     return true;
