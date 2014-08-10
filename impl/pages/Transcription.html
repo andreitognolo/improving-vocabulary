@@ -50,8 +50,8 @@
 
                     var id = querystring().get('id');
                     if (!id) {
-                        $.get('/s/Episode/nextTranscription', function(id) {
-                            location.hash = "#Transcription?id=" + id;
+                        $.iyvc.nextTranscription(function(id){
+                            location = "#Transcription?id=" + id;
                         });
                         return;
                     }
@@ -63,7 +63,13 @@
                         return false;
                     });
 
-                    $.get('/s/Episode/find?data={"id": ' + id + '}', function(episodes) {
+                    var data = {
+                        data:{
+                            id : id
+                        }
+                    }
+                    
+                    $.iyvc.findEpisode(data, function(episodes){
                         var episode = episodes[0];
                         if ($.opand(episode.sentences , episode.sentences.length)) {
                             episode.sentences.forEach(function(sentence) {
@@ -88,8 +94,8 @@
                             }
 
                             sentences.push({
-                                'character' : character,
-                                'sentence' : sentence
+                                character : character,
+                                sentence : sentence
                             });
                         });
 
@@ -97,8 +103,8 @@
                             id : id,
                             sentences : sentences
                         }
-
-                        $.post('/s/Episode/saveTranscription', JSON.stringify(episode)).complete(function(result) {
+                        
+                        $.iyvc.saveTranscription(episode , function(){
                             $.success('Episodio salvo com sucesso');
                             location.hash = "#Episode?episodeId=" + id;
                         });

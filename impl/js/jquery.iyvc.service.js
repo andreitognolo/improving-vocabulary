@@ -23,9 +23,7 @@
             url : url,
             success : callbackSuccess(success),
             error : callbackError(error),
-            type: type,
-            dataType: "json",
-            contentType : "application/json"
+            type: type
         }
         
         if (data !== null) {
@@ -43,13 +41,17 @@
     
     function mount(desc, name, type, url){
         $.iyvc[name] = function(data, success, error){
-           return ajax(type, url, data, success, error);
+            if(typeof(data) == 'function'){
+                return ajax(type, url, null, data, success);
+            }
+            return ajax(type, url, data, success, error);
         }
     }
     
-
-    
+    mount("Procurando Episodio", "findEpisode", "GET", "/s/Episode/find");
     mount("Procurando Episodios", "findEpisodes", "POST", "/s/Episode/find");
     mount("Proximo Episodio", "nextEpisode", "POST", "/s/Episode/next");
+    mount("Salvando Transcricao", "saveTranscription", "POST", "/s/Episode/saveTranscription");
+    mount("Buscando Proxima Transcricao", "nextTranscription", "GET", "/s/Episode/nextTranscription");
     
 })(jQuery);
