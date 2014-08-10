@@ -39,5 +39,6 @@
     }
     
     mount("Procurando Episodios", "findEpisodes", "POST", "/s/Episode/find");
+    mount("Proximo Episodio", "nextEpisode", "POST", "/s/Episode/next");
     
 })(jQuery);

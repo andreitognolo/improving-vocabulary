@@ -39,9 +39,10 @@
                             episodeId = 1;
                         }
 
-                        $.post('/s/Episode/next', JSON.stringify({previousEpisodeId: episodeId}), function(episode) {
-                            location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
-                        });
+                        var data = { previousEpisodeId : episodeId };
+                         $.iyvc.nextEpisode(data, function(episode){
+                             location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
+                         });
                     }
 
                     function clickPrevious() {
