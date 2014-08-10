@@ -18,7 +18,12 @@
     
     <section class="sentence">
         {{~it : sentence}}
-            <p><strong>{{!sentence.character}}</strong>: {{!sentence.sentence}}</p>
+            <div class="paragraph">
+                <div class="bold">{{!sentence.character}}:</div> 
+                {{~sentence.splited : splited}}
+                    <div class="sentence">{{!splited}}</div>
+                {{~}}
+            </div>
         {{~}}
     </section>
     
@@ -58,13 +63,29 @@
                         return;
                     }
                     
+                    function splitSentence(episode){
+                        var sentences = episode.sentences;
+                        for(var i=0; $.oplt(i, sentences.length); i++){
+                            sentences[i].splited = sentences[i].sentence.split(" ");
+                        }
+                        return episode;
+                    }
+                    
                     var data = {id:episodeId};
                     $.iyvc.findEpisodes(data, function(episodes){
                         var episode = episodes[0];
                         page.find('.episode').html('<img src="img/calvin-hobbes/' + episode.id + '.gif" />');
 
                         if (episode.sentences) {
+                           episode = splitSentence(episode);
                            page.find('.sentences').html(tSentence(episode.sentences));
+                           page.find('.sentence').click(function(){
+                                if($(this).hasClass('selected')){
+                                    $(this).removeClass('selected');
+                                    return true;
+                                }
+                               $(this).addClass('selected');
+                           });
                         } else {
                             $.warning('Esse episodio ainda nao foi transcrito!', 10000);
                         }
