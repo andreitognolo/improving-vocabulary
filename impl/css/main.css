@@ -31,6 +31,7 @@ select.character {
 
 .form-inline input.sentence {
 	width: 700px;
+    text-transform: uppercase;
 }
 
 .form-inline div.new-sentence {
@@ -74,9 +75,6 @@ div.word.selected {
   font-weight: bold;
   margin: 0;
   padding: 0 10px;
-}
-
-div.paragraph div {
 }
 
 div.paragraph {
