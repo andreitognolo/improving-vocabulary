@@ -37,4 +37,24 @@ exports.stack = function(t){
 			});
 		});
 	});
+    
+    t.asyncTest('Query', function(assert) {
+		var id = new Date().getTime();
+		var e = EntityTest.newEntityTest();
+		e.id = id;
+		e.a = 10;
+		e.b = 20;
+		e.list = ['a', 'b'];
+		
+		Storage.put(e).done(function() {
+            Storage.query('EntityTest').find({a:{$gt:5}}).done(function(list){
+                var entityFromDatabase = list[0];
+				assert.equal(id, entityFromDatabase.id);
+				assert.equal('EntityTest', entityFromDatabase.collection);
+				assert.deepEqual(['a', 'b'], entityFromDatabase.list);
+				assert.equal(30, entityFromDatabase.c);
+				t.start();
+            });
+		});
+	});
 }

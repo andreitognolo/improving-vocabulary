@@ -6,6 +6,31 @@ var entityToCollectionMap = {
 
 var DomainUtil = require('./domain/DomainUtil');
 
+function entity(entityClass){
+    // FIXME(Andrei) - We dont need this map
+    var collectionName = entityToCollectionMap[entityClass];
+	if (!collectionName || typeof collectionName != 'string') {
+		throw "Collection must be a valid string: '" + collectionName + "'";
+	}
+    return collectionName;
+}
+
+function newEntityClass(entityClass){
+    return require(DOMAIN_DIR + entityClass)['new' + entityClass]();
+}
+
+function convertArrayToEntity(result, entityClass){
+    var array = [];
+    for(var i=0; i<result.length; i++){
+        var newEntity = newEntityClass(entityClass);
+        for (var property in result[i]) {
+          newEntity[property] = result[i][property];
+        }
+        array.push(newEntity);
+    }
+    return array;
+}
+
 exports.put = function(entity) {
 	if (!entity.collection) {
 		throw 'The entity doesnt have property with name "collection". Entity constructor: ' + entity.constructor.toString();
@@ -53,12 +78,30 @@ exports.put = function(entity) {
 	}
 }
 
+
+exports.query = function(entityClass){
+    return {
+        find : function(query){
+            return {
+                done : function(callback){
+                    require('./MongoHelper').connect(function(db) {
+                        var collectionName = entity(entityClass);
+                        var c = db.collection(collectionName);
+                        c.find(query).toArray(function(err, result) {
+                            var array = convertArrayToEntity(result, entityClass);
+                            callback(array); 
+                            db.close();
+                        });
+                    });
+                }
+            }
+        }
+    }
+}
+
 exports.findById = function(entityClass, id) {
-	// FIXME(Andrei) - We dont need this map
-	var collectionName = entityToCollectionMap[entityClass];
-	if (!collectionName || typeof collectionName != 'string') {
-		throw "Collection must be a valid string: '" + collectionName + "'";
-	}
+	
+    var collectionName = entity(entityClass);
 	
 	return {
 		done: function(callback) {
@@ -67,18 +110,9 @@ exports.findById = function(entityClass, id) {
 				var collection = db.collection(collectionName);
 				var params = {};
 				params.id = id;
-				
 				collection.find(params).sort({id:1}).toArray(function(err, result) {
-					// BadSmell - Is this transform really necessary?
-					var resultFromMongo = JSON.parse(JSON.stringify(result))[0];
-					
-					var newEntity	 = require(DOMAIN_DIR + entityClass)['new' + entityClass]();
-
-					for (property in resultFromMongo) {
-						newEntity[property] = resultFromMongo[property];
-					}
-					
-					callback(newEntity);
+                    var array = convertArrayToEntity(result, entityClass);
+					callback(array[0]);
 					db.close();
 				});
 			});

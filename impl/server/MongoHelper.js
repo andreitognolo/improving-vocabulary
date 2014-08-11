@@ -16,10 +16,10 @@ function connect(cb) {
 
 function reset(cb) {
 	connect(function(db) {
-		db.collection('episodes').remove(function() {
-			cb();
-			db.close();
-		});
+        db.dropDatabase(function(){
+            cb();
+            db.close();
+        });
 	});
 }
 
