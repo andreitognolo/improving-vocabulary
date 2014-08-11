@@ -1,19 +1,6 @@
 var DOMAIN_DIR = './domain/';
-var entityToCollectionMap = {
-	'EntityTest': 'EntityTest',
-	'Episode': 'episodes'
-}
-
 var DomainUtil = require('./domain/DomainUtil');
 
-function entity(entityClass){
-    // FIXME(Andrei) - We dont need this map
-    var collectionName = entityToCollectionMap[entityClass];
-	if (!collectionName || typeof collectionName != 'string') {
-		throw "Collection must be a valid string: '" + collectionName + "'";
-	}
-    return collectionName;
-}
 
 function newEntityClass(entityClass){
     return require(DOMAIN_DIR + entityClass)['new' + entityClass]();
@@ -84,8 +71,9 @@ exports.query = function(entityClass){
         find : function(query){
             return {
                 done : function(callback){
-                    require('./MongoHelper').connect(function(db) {
-                        var collectionName = entity(entityClass);
+                    var mongoHelper = require('./MongoHelper');
+                    mongoHelper.connect(function(db) {
+                        var collectionName = mongoHelper.entityCollection(entityClass);
                         var c = db.collection(collectionName);
                         c.find(query).toArray(function(err, result) {
                             var array = convertArrayToEntity(result, entityClass);
@@ -101,11 +89,11 @@ exports.query = function(entityClass){
 
 exports.findById = function(entityClass, id) {
 	
-    var collectionName = entity(entityClass);
+	var mongoHelper = require('./MongoHelper');
+     var collectionName = mongoHelper.entityCollection(entityClass);
 	
 	return {
 		done: function(callback) {
-			var mongoHelper = require('./MongoHelper');
 			mongoHelper.connect(function(db) {
 				var collection = db.collection(collectionName);
 				var params = {};
