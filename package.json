@@ -7,7 +7,7 @@
     "mongodb": "~1.4.0"
   },
   "devDependencies": {
-    "qunitjs": "~1.14.0"
+    "qunitjs": "~1.15.0"
   },
   "scripts": {
     "test": "node test/test-runner.js",
