@@ -3,8 +3,8 @@ node_js:
   - "0.11"
   - "0.10"
 before_install: pwd;
-install: ./cmds/ci/install.sh;
+install: npm install;
 before_script: ./cmds/ci/before_script.sh
-script: ./cmds/ci/script.sh;
+script: npm test;
 services:
   - mongodb
