@@ -78,11 +78,13 @@ function callservice(body, service, func, response) {
 	if (body) {
     	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
     	ret.done(function(result) {
+            result = JSON.stringify(result);
     		response.end(result || 'void');
     	});
     } else {
     	var ret = eval(service + "Service." + func + "()");
     	ret.done(function(result) {
+            result = JSON.stringify(result);
     		response.end(result || 'void');
     	});
     }
