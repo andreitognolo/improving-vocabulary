@@ -3,7 +3,7 @@
     $.iyvc = {};
     
     function callbackSuccess(success){
-        return function(resp){
+        return function(){
             if(success){
                 success.apply(window.this, arguments);
             }   
