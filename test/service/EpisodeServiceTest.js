@@ -76,7 +76,42 @@ exports.stack = function(t){
 		});
 	}
     
+    function nextTranscription(assert){
+        var callbackNextTranscription = function(id){
+               assert.equal(id, 2);
+               Storage.findById('Episode', 2).done(function(e){
+                    assert.equal(e.id, 2);
+                    assert.equal(e.transcripted, false);
+                    assert.equal(e.sentences.length, 0);
+                    t.start();
+               });
+        }
+        
+        var callbackSaveTranscription = function(){
+           saveEpisode(2, function(){
+                episodeService.nextTranscription().done(callbackNextTranscription);
+           }); 
+        }
+        
+        var saveTranscription = function() {
+            var e = {};
+            e.id = "1";
+            e.sentences = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+            episodeService.saveTranscription(e).done(callbackSaveTranscription);
+		}
+        
+        var saveEpisode = function(id , callback){
+            var episode = new Episode.newEpisode();
+            episode.id = id;
+            episode.transcripted = false;
+            episodeService.save(episode).done(callback);
+        }
+        
+        saveEpisode(1, saveTranscription);
+    }
+    
 	t.asyncTest('Save Episode', saveEpisode);
     t.asyncTest('Save Transcription', saveTranscription);
+    t.asyncTest('Next Transcription', nextTranscription);
 	t.asyncTest('Sync Episodes', syncEpisodes);
 }
