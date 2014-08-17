@@ -7,6 +7,9 @@ function newEntityClass(entityClass){
 }
 
 function convertArrayToEntity(result, entityClass){
+    if(!result){
+        return [];
+    }
     var array = [];
     for(var i=0; i<result.length; i++){
         var newEntity = newEntityClass(entityClass);
@@ -67,24 +70,41 @@ exports.put = function(entity) {
 
 
 exports.query = function(entityClass){
-    return {
-        find : function(query){
-            return {
-                done : function(callback){
-                    var mongoHelper = require('./MongoHelper');
-                    mongoHelper.connect(function(db) {
-                        var collectionName = mongoHelper.entityCollection(entityClass);
-                        var c = db.collection(collectionName);
-                        c.find(query).toArray(function(err, result) {
-                            var array = convertArrayToEntity(result, entityClass);
-                            callback(array); 
-                            db.close();
-                        });
-                    });
+    var done = function(callback){
+            var mongoHelper = require('./MongoHelper');
+            mongoHelper.connect(function(db) {
+                var collectionName = mongoHelper.entityCollection(entityClass);
+                var col = db.collection(collectionName);
+                var cursor = col.find(opts.query);
+
+                if(opts.sort){
+                    cursor = cursor.sort(opts.querySort);  
                 }
-            }
-        }
+                
+                cursor.toArray(function(err, result) {
+                    var array = convertArrayToEntity(result, entityClass);
+                    callback(array); 
+                    db.close();
+                });
+            });
     }
+    
+    var sort = function(s){
+        opts.querySort = s;
+        return opts;
+    }
+    
+    var opts = {
+        done : done,
+        sort : sort
+    }
+    
+    return {
+            find :  function(q){
+            opts.query = q;
+            return opts;
+        }
+    };   
 }
 
 exports.findById = function(entityClass, id) {
