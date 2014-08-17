@@ -114,7 +114,6 @@ exports.stack = function(t){
         var nextEpisode = function(){
             var data = { previousEpisodeId : 1 }
             episodeService.next(data).done(function(result){
-                result = JSON.parse(result);
                 assert.equal(result.id, 2);
                 t.start();
             });
