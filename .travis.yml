@@ -8,3 +8,10 @@ before_script: ./cmds/ci/before_script.sh
 script: npm test;
 services:
   - mongodb
+notifications:
+     email:
+         recipients:
+             - renatoferreira656@gmail.com
+             - andreitognolo@gmail.com
+         on_success: change
+         on_failure: always
