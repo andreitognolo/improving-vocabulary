@@ -112,25 +112,25 @@ exports.stack = function(t){
     
     function nextEpisode(assert){
         var nextEpisode = function(){
-            var data = { previousEpisodeId : 1 }
+            var data = { previousEpisodeId : 1 , array : [ "HI" ] }
             episodeService.next(data).done(function(result){
-                assert.equal(result.id, 2);
+                assert.equal(result.id, 3);
                 t.start();
             });
         }
   
         var transcription4 = function(){
-           var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+           var s = [ { character : "CALVIN", sentence : "MY" }, { character : "PAI", sentence : "NOP" } ];
            saveEpisode(4, saveTranscription(4, s, nextEpisode)); 
         }
         
         var transcription3 = function(){
-           var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+           var s = [ { character : "CALVIN", sentence : "HI" }, { character : "PAI", sentence : "YUP" } ];
            saveEpisode(3, saveTranscription(3, s, transcription4)); 
         }
         
         var transcription2 = function(){
-           var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+           var s = [ { character : "CALVIN", sentence : "YEAH!" }, { character : "PAI", sentence : "WOW" } ];
            saveEpisode(2, saveTranscription(2, s, transcription3)); 
         }
         
@@ -150,7 +150,7 @@ exports.stack = function(t){
             episodeService.save(episode).done(callback);
         }
         
-        var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+        var s = [ { character : "CALVIN", sentence : "HI POP!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
         saveEpisode(1, saveTranscription(1, s, transcription2));
     }
     

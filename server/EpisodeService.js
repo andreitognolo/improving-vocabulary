@@ -2,8 +2,27 @@ exports.next = function(data) {
 	return {
 		done : function(callback) {
             var Storage = require('./Storage');
-            Storage.query('Episode').find({id:{$gt:parseInt(data.previousEpisodeId)}}).done(function(results){
-                callback(results[0]);
+            var query = {
+                id : { $gt : parseInt(data.previousEpisodeId) },
+                transcripted : true
+            }
+            
+            if(data.array && data.array.length){
+              query.words = { $in : data.array };
+            }
+            
+            Storage.query('Episode').find(query).done(function(results){
+                if(results.length){
+                    callback(results[0]);
+                    return;
+                }
+                
+                if(query.words && query.words.$in.length){
+                    delete query.words;
+                    Storage.query('Episode').find(query).done(function(res){
+                        callback(res[0]);
+                    });
+                }
             });
 		}
 	}
@@ -43,7 +62,6 @@ exports.sync = function(episodeId) {
 					throw 'Error: ' + err;
 				}
 
-				console.log('episodeId', episodeId);
 				if (episodeId) {
 					files = [episodeId];
 				} else {
@@ -51,7 +69,6 @@ exports.sync = function(episodeId) {
 						return parseInt(value.replace('.gif', ''));
 					});
 				}
-
 				exports.syncFiles(files, callback);
 			});
 		}
@@ -73,9 +90,7 @@ exports.syncFiles = function(files, callback) {
 			episode.id = value;
 			episode.year = year;
 			Storage.put(episode).done(function(result) {
-				console.log('UPDATE: ' + value + ' - result: ' + result);
 				count++;
-				
 				if (count == files.length) {
 					callback('UPDATING: ' + files.length);
 				}

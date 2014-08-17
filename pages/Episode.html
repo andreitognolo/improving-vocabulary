@@ -44,10 +44,15 @@
                             episodeId = 1;
                         }
 
-                        var data = { previousEpisodeId : episodeId };
-                         $.iyvc.nextEpisode(data, function(episode){
-                             location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
-                         });
+                        var array = [];
+                        page.find('.sentences .selected').each(function(){
+                            array.push($(this).html());
+                        });
+                        
+                        var data = { previousEpisodeId : episodeId, array: array };
+                        $.iyvc.nextEpisode(data, function(episode){
+                            location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
+                        });
                     }
 
                     function clickPrevious() {
