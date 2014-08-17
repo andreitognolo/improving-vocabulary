@@ -93,21 +93,15 @@ exports.syncFiles = function(files, callback) {
 exports.find = function(params) {
 	return {
 		done: function(callback) {
-			var mongoHelper = require('./MongoHelper');
-			mongoHelper.connect(function(db) {
-				var episodes = db.collection('episodes');
-				if (params.year) {
-					params.year = parseInt(params.year);
-				}
-				if (params.id) {
-					params.id = parseInt(params.id);
-				}
-
-				episodes.find(params).sort({id:1}).toArray(function(err, result) {
-					db.close();
-					callback(JSON.stringify(result));
-				});
-			});
+            var Storage = require('./Storage');
+            var query = {};
+            if (params.year) {
+				query.year = parseInt(params.year);
+			}
+			if (params.id) {
+				query.id = parseInt(params.id);
+			}
+            Storage.query('Episode').find(query).done(callback);
 		}
 	}
 }

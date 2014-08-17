@@ -8,8 +8,8 @@ var MongoHelper = require(HOME + '/server/MongoHelper');
 exports.stack = function(t){
 
 	t.module("EpisodeServiceTest");
-	
-	t.asyncTest('Save Episode', function(assert) {
+    
+    function saveEpisode(assert) {
 		var episode = new Episode.newEpisode();
 		episode.id = 1;
 		episode.transcripted = true;
@@ -17,8 +17,7 @@ exports.stack = function(t){
         
 		episodeService.save(episode).done(function() {
 			episodeService.find({id: episode.id}).done(function(json) {
-				var episodeRecorded = JSON.parse(json)[0];
-				
+				var episodeRecorded = json[0];
 				assert.equal(1, episodeRecorded.id);
 				assert.equal(true, episodeRecorded.transcripted);
                 assert.deepEqual([ 'HI', 'DAD!', 'HI!', 'CALVIN' ], episodeRecorded.words);
@@ -26,32 +25,12 @@ exports.stack = function(t){
 				t.start();
 			});
 		});
-	});
-    
-    
-    t.asyncTest('Save Episode', function(assert) {
-		var episode = new Episode.newEpisode();
-		episode.id = 1;
-		episode.transcripted = true;
-        episode.sentences = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
-        
-		episodeService.save(episode).done(function() {
-			episodeService.find({id: episode.id}).done(function(json) {
-				var episodeRecorded = JSON.parse(json)[0];
-				
-				assert.equal(1, episodeRecorded.id);
-				assert.equal(true, episodeRecorded.transcripted);
-                assert.deepEqual([ 'HI', 'DAD!', 'HI!', 'CALVIN' ], episodeRecorded.words);
-                assert.deepEqual([ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ], episodeRecorded.sentences);
-				t.start();
-			});
-		});
-	});
+	}
 	
-    t.asyncTest('Save Transcription', function(assert) {
+    function saveTranscription(assert) {
         
         var callbackFind = function(json) {
-            var episodeRecorded = JSON.parse(json)[0];
+            var episodeRecorded = json[0];
 
             assert.equal(1, episodeRecorded.id);
             assert.equal(true, episodeRecorded.transcripted);
@@ -76,11 +55,9 @@ exports.stack = function(t){
 		episode.id = 1;
 		episode.transcripted = false;
 		episodeService.save(episode).done(callbackSave);
-	});
+	}
     
-    
-	t.asyncTest('Sync Episodes', function(assert) {
-		// FIXME(Andrei) - Use QUnit.testStart() when travis install mongodb
+    function syncEpisodes(assert) {
 		var episode = Episode.newEpisode();
 		episode.id = 19851119;
 		// FIXME(Andrei) - addSentence method?
@@ -97,5 +74,9 @@ exports.stack = function(t){
 				});
 			});
 		});
-	});
+	}
+    
+	t.asyncTest('Save Episode', saveEpisode);
+    t.asyncTest('Save Transcription', saveTranscription);
+	t.asyncTest('Sync Episodes', syncEpisodes);
 }
