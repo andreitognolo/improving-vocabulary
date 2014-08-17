@@ -15,13 +15,10 @@ exports.next = function(data) {
 exports.nextTranscription = function() {
 	return {
 		done : function(callback) {
-			require('./MongoHelper').connect(function(db) {
-				var collection = db.collection('episodes');
-				collection.find({transcripted: {$ne: true}}).toArray(function(err, results) {
-					callback(results[0].id.toString());
-					db.close();
-				});
-			});
+            var Storage = require('./Storage');
+            Storage.query('Episode').find({transcripted: {$ne: true}}).done(function(results){
+                callback(results[0].id);
+            });
 		}
 	}
 }
