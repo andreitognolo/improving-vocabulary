@@ -110,7 +110,54 @@ exports.stack = function(t){
         saveEpisode(1, saveTranscription);
     }
     
+    function nextEpisode(assert){
+        var nextEpisode = function(){
+            var data = { previousEpisodeId : 1 }
+            episodeService.next(data).done(function(result){
+                result = JSON.parse(result);
+                assert.equal(result.id, 2);
+                t.start();
+            });
+        }
+  
+        var transcription4 = function(){
+           var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+           saveEpisode(4, saveTranscription(4, s, nextEpisode)); 
+        }
+        
+        var transcription3 = function(){
+           var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+           saveEpisode(3, saveTranscription(3, s, transcription4)); 
+        }
+        
+        var transcription2 = function(){
+           var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+           saveEpisode(2, saveTranscription(2, s, transcription3)); 
+        }
+        
+        var saveTranscription = function(id, sentences, cb) {
+            return function() { 
+                var e = {};
+                e.id = id;
+                e.sentences = sentences;
+                episodeService.saveTranscription(e).done(cb);
+            }
+		}
+        
+        var saveEpisode = function(id , callback){
+            var episode = new Episode.newEpisode();
+            episode.id = id;
+            episode.transcripted = false;
+            episodeService.save(episode).done(callback);
+        }
+        
+        var s = [ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ];
+        saveEpisode(1, saveTranscription(1, s, transcription2));
+    }
+    
+    
 	t.asyncTest('Save Episode', saveEpisode);
+    t.asyncTest('Next Episode', nextEpisode);
     t.asyncTest('Save Transcription', saveTranscription);
     t.asyncTest('Next Transcription', nextTranscription);
 	t.asyncTest('Sync Episodes', syncEpisodes);
