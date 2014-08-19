@@ -75,6 +75,7 @@ function processService(uri, req, response) {
 }
 
 function callservice(body, service, func, response) {
+    console.log('callservice - ' + service + "Service." + func);
 	if (body) {
     	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
     	ret.done(function(result) {

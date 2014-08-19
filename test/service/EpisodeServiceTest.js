@@ -57,23 +57,52 @@ exports.stack = function(t){
 		episodeService.save(episode).done(callbackSave);
 	}
     
-    function syncEpisodes(assert) {
-		var episode = Episode.newEpisode();
-		episode.id = 19851119;
-		// FIXME(Andrei) - addSentence method?
-		episode.sentences = [{'character': 'Calvin', 'sentence': 'aaaa bbbb ccc'}];
-		
-		episodeService.save(episode).done(function() {
-			var files = [19851118, 19851119];
-			episodeService.syncFiles(files, function() {
-				Storage.findById('Episode', 19851119).done(function(episodeFromDB) {
-					assert.equal(19851119, episodeFromDB.id);
-					assert.equal(1, episodeFromDB.sentences.length);
-					assert.deepEqual(['aaaa', 'bbbb', 'ccc'], episodeFromDB.words);
-					t.start();
-				});
-			});
-		});
+    function reprocessWords(assert) {
+        createEpisodeWithoutWords = function() {
+            MongoHelper.connect(function(db) {
+                var collection = db.collection('episodes');
+                collection.update({
+                    id: 1,
+                }, {
+                    $set :{sentences: [{'character': 'Calvin', 'sentence': 'aaaa bbbb ccc'}]}
+                }, {
+                    upsert : true,
+                    w : 1
+                }, function() {
+                    db.close();
+                    thenThereAreNoWords();
+                });
+            });
+        }();
+        
+        thenThereAreNoWords = function() {
+            MongoHelper.connect(function(db) {
+                var collection = db.collection('episodes');
+                collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
+                    db.close();
+                    assert.ok(!result.length);
+                    thenReprocess();
+                });
+            });
+        }
+        
+        thenReprocess = function() {
+            episodeService.reprocessWords(1).done(function(result) {
+                assert.ok(1, result, 'Id 1 reprocessed');
+                thenThereAreWords();
+            });
+        }
+        
+        thenThereAreWords = function() {
+            MongoHelper.connect(function(db) {
+                var collection = db.collection('episodes');
+                collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
+                    db.close();
+                    assert.ok(result.length);
+                    t.start();
+                });
+            });
+        }
 	}
     
     function nextTranscription(assert){
@@ -154,10 +183,9 @@ exports.stack = function(t){
         saveEpisode(1, saveTranscription(1, s, transcription2));
     }
     
-    
 	t.asyncTest('Save Episode', saveEpisode);
     t.asyncTest('Next Episode', nextEpisode);
     t.asyncTest('Save Transcription', saveTranscription);
     t.asyncTest('Next Transcription', nextTranscription);
-	t.asyncTest('Sync Episodes', syncEpisodes);
+	t.asyncTest('Reprocess Words', reprocessWords);
 }

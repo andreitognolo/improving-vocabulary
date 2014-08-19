@@ -99,6 +99,71 @@ exports.syncFiles = function(files, callback) {
 	});
 }
 
+// FIXME(Andrei) - exports, exports, exports...
+exports.reprocessWordsAll = function() {
+    return {
+        done : function(callback) {
+            exports.all().done(function(episodes) {
+                var count = 0;
+                console.log('Reprocessing: ' + episodes.length);
+                episodes.forEach(function(episode) {
+                    exports.reprocessWords(episode.id).done(function() {
+                        count++;
+                        if (count == episodes.length) {
+                            console.log('Reprocessed: ' + count);
+                            callback();   
+                        }
+                    });
+                });
+            });
+        }
+    }
+}
+
+exports.reprocessWords = function(episodeId) {
+    var WordsUtil = require('./util/WordsUtil');
+    
+    return {
+        done : function(callback) {
+            var MongoHelper = require('./MongoHelper');
+            MongoHelper.connect(function(db) {
+                var collection = db.collection('episodes');
+                collection.find({id: episodeId}).toArray(function(err, episodesFromDB) {
+                    var episode = episodesFromDB[0];
+                    var sentences = episode.sentences.map(function(obj) {
+                        return obj.sentence;
+                    });
+                    
+                    var allSentences = '';
+                    sentences.forEach(function(el) {
+                        allSentences += ' ' + el; 
+                    });
+                    
+                    collection.update({
+                        id : episode.id
+                    }, {
+                        $set : {words: WordsUtil.words(allSentences)}
+                    }, {
+                        upsert : true,
+                        w : 1
+                    }, function() {
+                        db.close();
+                        callback(episode.id);
+                    });
+                });
+            });
+        }
+    }
+}
+
+exports.all = function() {
+    return {
+        done : function(callback) {
+            exports.find({}).done(callback);
+        }
+    }
+}
+
 exports.find = function(params) {
 	return {
 		done: function(callback) {
