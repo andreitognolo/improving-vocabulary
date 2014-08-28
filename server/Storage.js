@@ -34,20 +34,18 @@ exports.put = function(entity) {
 				set[property] = entity[property];
 			});
 			
-			require('./MongoHelper').connect(function(db) {
-				var collection = db.collection(entity.collection);
-				collection.update({
-					id : entity.id
-				}, {
-					$set :set
-				}, {
-					upsert : true,
-					w : 1
-				}, function() {
-					db.close();
-					callback();
-				});
-			});
+            var db = require('./MongoHelper').db;
+            var collection = db.collection(entity.collection);
+            collection.update({
+                id : entity.id
+            }, {
+                $set :set
+            }, {
+                upsert : true,
+                w : 1
+            }, function() {
+                callback();
+            });
 		}
 	}
 }
@@ -96,16 +94,14 @@ exports.findById = function(entityClass, id) {
 	
 	return {
 		done: function(callback) {
-			mongoHelper.connect(function(db) {
-				var collection = db.collection(collectionName);
-				var params = {};
-				params.id = id;
-				collection.find(params).sort({id:1}).toArray(function(err, result) {
-                    var array = convertArrayToEntity(result, entityClass);
-					callback(array[0]);
-					db.close();
-				});
-			});
+			var db = mongoHelper.db;
+            var collection = db.collection(collectionName);
+            var params = {};
+            params.id = id;
+            collection.find(params).sort({id:1}).toArray(function(err, result) {
+                var array = convertArrayToEntity(result, entityClass);
+                callback(array[0]);
+            });
 		}
 	}
 }

@@ -128,30 +128,28 @@ exports.reprocessWords = function(episodeId) {
     return {
         done : function(callback) {
             var MongoHelper = require('./MongoHelper');
-            MongoHelper.connect(function(db) {
+            var db = MongoHelper.db;
                 var collection = db.collection('episodes');
                 collection.find({id: episodeId}).toArray(function(err, episodesFromDB) {
-                    var episode = episodesFromDB[0];
-                    var sentences = episode.sentences.map(function(obj) {
-                        return obj.sentence;
-                    });
-                    
-                    var allSentences = '';
-                    sentences.forEach(function(el) {
-                        allSentences += ' ' + el; 
-                    });
-                    
-                    collection.update({
-                        id : episode.id
-                    }, {
-                        $set : {words: WordsUtil.words(allSentences)}
-                    }, {
-                        upsert : true,
-                        w : 1
-                    }, function() {
-                        db.close();
-                        callback(episode.id);
-                    });
+                var episode = episodesFromDB[0];
+                var sentences = episode.sentences.map(function(obj) {
+                    return obj.sentence;
+                });
+
+                var allSentences = '';
+                sentences.forEach(function(el) {
+                    allSentences += ' ' + el; 
+                });
+
+                collection.update({
+                    id : episode.id
+                }, {
+                    $set : {words: WordsUtil.words(allSentences)}
+                }, {
+                    upsert : true,
+                    w : 1
+                }, function() {
+                    callback(episode.id);
                 });
             });
         }
