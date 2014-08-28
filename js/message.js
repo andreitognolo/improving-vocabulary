@@ -4,8 +4,6 @@
 		var msg = $('<div class="alert alert-success">' + text + '</div>');
 		$('.message').append(msg);
 		
-		console.log('time', time || 15000);
-		
 		setTimeout(function() {
 			msg.fadeOut(1000);
 		}, time || 5000);

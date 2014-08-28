@@ -47,7 +47,9 @@ exports.saveTranscription = function(episode) {
             obj.id = parseInt(episode.id);
             obj.transcripted = true;
             obj.sentences = episode.sentences;
-            exports.save(obj).done(callback);
+            exports.save(obj).done(function() {
+                callback(obj.id);   
+            });
 		}
 	}
 }
