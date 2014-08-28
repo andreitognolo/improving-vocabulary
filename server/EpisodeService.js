@@ -129,9 +129,14 @@ exports.reprocessWords = function(episodeId) {
         done : function(callback) {
             var MongoHelper = require('./MongoHelper');
             var db = MongoHelper.db;
-                var collection = db.collection('episodes');
-                collection.find({id: episodeId}).toArray(function(err, episodesFromDB) {
+            var collection = db.collection('episodes');
+            collection.find({id: episodeId}).toArray(function(err, episodesFromDB) {
                 var episode = episodesFromDB[0];
+                if (!episode.sentences) {
+                    callback(episode.id);
+                    return;
+                }
+                
                 var sentences = episode.sentences.map(function(obj) {
                     return obj.sentence;
                 });
