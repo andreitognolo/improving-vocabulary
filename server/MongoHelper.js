@@ -12,6 +12,12 @@ function entityCollection(entityClass){
     return collectionName;
 }
 
+function init(cb) {
+    connect(function(database) {
+        exports.db = database;
+        cb();
+    });
+}
 
 function connect(cb) {
 	var MongoClient = require('mongodb').MongoClient
@@ -49,6 +55,7 @@ function reset(cb) {
 	});
 }
 
+exports.init = init;
 exports.connect = connect;
 exports.reset = reset;
 exports.entityCollection = entityCollection;

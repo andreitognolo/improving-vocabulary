@@ -91,15 +91,23 @@ function callservice(body, service, func, response) {
     }
 }
 
-http.createServer(function(request, response) {
-	var uri = url.parse(request.url).pathname;
-	if (uri.indexOf('/s/') == 0) {
-		processService(uri, request, response);
-	} else {
-		processStatic(uri, request, response);
-	}
-
-}).listen(parseInt(port, 10), ip_address);
-
-console.log("Static file server running at\n  => http://localhost:" + port
+require('./server/MongoHelper').init(function() {
+    var mongoHelper = require('./server/MongoHelper');
+    if (mongoHelper.db) {
+        console.log('database is not undefined');
+    } else {
+        console.log('ixi... it is undefined');
+    }
+    
+    http.createServer(function(request, response) {
+       var uri = url.parse(request.url).pathname;
+        if (uri.indexOf('/s/') == 0) {
+            processService(uri, request, response);
+        } else {
+            processStatic(uri, request, response);
+        } 
+    }).listen(parseInt(port, 10), ip_address);
+    
+    console.log("Static file server running at\n  => http://localhost:" + port
 		+ "/\nCTRL + C to shutdown");
+});

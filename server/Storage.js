@@ -55,22 +55,20 @@ exports.put = function(entity) {
 
 exports.query = function(entityClass){
     var done = function(callback){
-            var mongoHelper = require('./MongoHelper');
-            mongoHelper.connect(function(db) {
-                var collectionName = mongoHelper.entityCollection(entityClass);
-                var col = db.collection(collectionName);
-                var cursor = col.find(opts.query);
+        var mongoHelper = require('./MongoHelper');
+        var db = mongoHelper.db;
+        var collectionName = mongoHelper.entityCollection(entityClass);
+        var col = db.collection(collectionName);
+        var cursor = col.find(opts.query);
 
-                if(opts.sort){
-                    cursor = cursor.sort(opts.querySort);  
-                }
-                
-                cursor.toArray(function(err, result) {
-                    var array = convertArrayToEntity(result, entityClass);
-                    callback(array); 
-                    db.close();
-                });
-            });
+        if(opts.sort){
+            cursor = cursor.sort(opts.querySort);  
+        }
+
+        cursor.toArray(function(err, result) {
+            var array = convertArrayToEntity(result, entityClass);
+            callback(array); 
+        });
     }
     
     var sort = function(s){

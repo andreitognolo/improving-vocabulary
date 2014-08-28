@@ -28,9 +28,15 @@ t.done(function(result){
 t.testStart(function(){
     t.stop();
     MongoHelper.reset(function(){
-        t.start();
-    })
-})
+        MongoHelper.init(function() {
+            t.start();
+        });
+    });
+});
+
+t.testDone(function(){
+   MongoHelper.db.close(); 
+});
 
 if (process.argv.length == 3) {
 	console.log('Executing test: ' + process.argv[2]);
