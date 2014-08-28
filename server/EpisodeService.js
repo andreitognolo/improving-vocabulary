@@ -175,7 +175,7 @@ exports.find = function(params) {
 			if (params.id) {
 				query.id = parseInt(params.id);
 			}
-            Storage.query('Episode').find(query).done(callback);
+            Storage.query('Episode').find(query).sort({'id': 1}).done(callback);
 		}
 	}
 }
