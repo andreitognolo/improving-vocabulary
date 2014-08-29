@@ -9,7 +9,7 @@ exports.stack = function(t) {
 		var words = WordsUtil.words('a bb ccc');
 		t.deepEqual(['a', 'bb', 'ccc'], words);
 		
-		//words = WordsUtil.words('a! bb? cc\'c DD,');
-		//t.deepEqual(['a', 'bb', 'ccc', 'DD'], words);
+		words = WordsUtil.words('a! bb? cc\'c DD,');
+		t.deepEqual(['a', 'bb', 'ccc', 'DD'], words);
 	});
 }
