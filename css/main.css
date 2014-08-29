@@ -63,17 +63,22 @@ div.word {
   display: inline-block;
   margin-right: 5px;
   cursor: pointer;
+    
+  margin: 0;
+  padding: 0 10px;
+  border: medium none;
+  border-radius: 7px;
+  background: none repeat scroll 0 0 #428bca;
+}
+
+div.word {
+  
 }
 
 div.word.selected {
-  background: none repeat scroll 0 0 #428bca;
-  border: medium none;
-  border-radius: 7px;
+  background: none repeat scroll 0 0 #CCCCCC;
   color: #fff;
-  cursor: pointer;
   font-weight: bold;
-  margin: 0;
-  padding: 0 10px;
 }
 
 div.paragraph {
