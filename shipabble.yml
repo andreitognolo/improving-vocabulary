@@ -13,5 +13,5 @@ notifications:
          recipients:
              - renatoferreira656@gmail.com
              - andreitognolo@gmail.com
-         on_success: never
-         on_failure: never
+         on_success: change
+         on_failure: always
