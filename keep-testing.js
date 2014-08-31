@@ -31,7 +31,7 @@ function listener(path){
                 console.log(stdout);
                 console.log(stderr);
 
-                new Notification().notify({  message: error ? "FAILLLL" : "PASSED" });
+                new Notification().notify({  title: error ? "FAILLLL" : "PASSED" , message: error? "=(" : "=D"});
             });
     }   
 }
