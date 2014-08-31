@@ -28,6 +28,9 @@ exports.stack = function(t) {
 	});
     
     t.test('collectionName', function(){
-        t.equal("EntityTest", "EntityTest");
+        t.equal(DomainUtil.collectionsName("EntityTest"), "entity-test");
+        t.equal(DomainUtil.collectionsName("Entity"), "entity");
+        t.equal(DomainUtil.collectionsName("EntityTestT"), "entity-test-t");
+        t.equal(DomainUtil.collectionsName("EEntityTestT"), "e-entity-test-t");
     })
 }

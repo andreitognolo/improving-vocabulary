@@ -25,7 +25,18 @@ function listProperties (entity) {
 
 
 function collectionsName(entity){
-    return entity.constructor.name;
+    var converted = "";
+    for(var i=0; i<entity.length; i++){
+        var char = entity.charAt(i);
+        if(char === entity.charAt(i).toUpperCase()){
+            char = entity.charAt(i).toLowerCase(); 
+            if(i > 0){
+                char = "-" + char;   
+            }
+        }
+        converted += char;
+    }
+    return converted;
 }
 
 
