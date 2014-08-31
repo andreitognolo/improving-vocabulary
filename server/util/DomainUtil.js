@@ -20,7 +20,6 @@ function listProperties (entity) {
 			result.push(i);
 		}
 	}
-	
 	return result;
 }
 

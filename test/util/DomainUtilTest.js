@@ -14,6 +14,7 @@ exports.stack = function(t) {
 			this.a = '';
 			this.b = undefined;
 		}
+        
 
 		t.equal(2, DomainUtil.listProperties(e).length);
 		
@@ -27,7 +28,6 @@ exports.stack = function(t) {
 	});
     
     t.test('collectionName', function(){
-        var e = EntityTest.newEntityTest();
-        t.equal(DomainUtil.collectionsName(e), "Object");  
+        t.equal("EntityTest", "EntityTest");
     })
 }

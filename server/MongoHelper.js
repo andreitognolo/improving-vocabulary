@@ -26,7 +26,8 @@ function connect(cb) {
 function reset(cb) {
     var col = [];
     var fs = require("fs");
-    fs.readdir('server/domain', function(err, files){
+    
+    fs.readdir('./server/domain', function(err, files){
         if (err) {
             throw 'Error: ' + err;
         }
