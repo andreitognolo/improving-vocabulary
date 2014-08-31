@@ -1,16 +1,4 @@
-var entityToCollectionMap = {
-	'EntityTest': 'EntityTest',
-	'Episode': 'episodes'
-}
 
-function entityCollection(entityClass){
-    // FIXME(Andrei) - We dont need this map
-    var collectionName = entityToCollectionMap[entityClass];
-	if (!collectionName || typeof collectionName != 'string') {
-		throw "Collection must be a valid string: '" + collectionName + "'";
-	}
-    return collectionName;
-}
 
 function init(cb) {
     connect(function(database) {
@@ -37,25 +25,36 @@ function connect(cb) {
 
 function reset(cb) {
     var col = [];
-    for(var i in entityToCollectionMap){
-        col.push(entityToCollectionMap[i]);
-    }
-	connect(function(db) {
-        function removeDb(i, db){
-            return function(){
-               if( i >= col.length){
-                   cb();
-                   db.close();
-                   return;
-               }
-               db.collection(col[i]).remove(removeDb(i + 1, db));
-            }
+    var fs = require("fs");
+    fs.readdir('server/domain', function(err, files){
+        if (err) {
+            throw 'Error: ' + err;
         }
-        removeDb(0, db)();
-	});
+        var domainUtil = require('./util/DomainUtil');
+        var collections = [];
+        for(var i=0; i< files.length; i++){
+            var domainName = files[i].replace(".js", "");
+            var collectionName = domainUtil.entityCollection(domainName);
+            collections.push(collectionName);
+        }
+        
+        connect(function(db) {
+            function removeDb(i, db){
+                return function(){
+                   if( i >= collections.length){
+                      cb();
+                       db.close();
+                       return;
+                   }
+                   db.collection(collections[i]).remove(removeDb(i + 1, db));
+                }
+            }
+            removeDb(0, db)();
+        });
+
+    });
 }
 
 exports.init = init;
 exports.connect = connect;
 exports.reset = reset;
-exports.entityCollection = entityCollection;

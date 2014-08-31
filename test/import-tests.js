@@ -3,7 +3,7 @@ exports.import = function(t){
 	var test = [];
 
 	test.push("./simple/simpleTest.js");
-	test.push("./domain/DomainUtilTest.js");
+	test.push("./util/DomainUtilTest.js");
 	test.push("./util/WordsUtilTest.js");
 	
 	// MongoDB required

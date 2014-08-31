@@ -1,6 +1,6 @@
 var HOME = './../..';
-var DomainUtil = require(HOME + '/server/domain/DomainUtil');
-var Episode = require(HOME + '/server/domain/Episode');
+var DomainUtil = require(HOME + '/server/util/DomainUtil');
+var EntityTest = require(HOME + '/server/domain/EntityTest');
 
 exports.stack = function(t) {
 
@@ -25,4 +25,9 @@ exports.stack = function(t) {
 		
 		t.equal(2, DomainUtil.listProperties(e).length);
 	});
+    
+    t.test('collectionName', function(){
+        var e = EntityTest.newEntityTest();
+        t.equal(DomainUtil.collectionsName(e), "Object");  
+    })
 }
