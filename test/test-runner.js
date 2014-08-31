@@ -12,7 +12,9 @@ t.log(function( details ) {
         console.error(error, "EXPECTED:", details.expected);
         console.error(error, "ACTUAL:", details.actual);
         console.error(error, "STACK:\n", details.source);
-        console.error(error, "MESSAGE:", details.message);
+        if(details.message){
+            console.error(error, "MESSAGE:", details.message);
+        }
     }
 });
 
