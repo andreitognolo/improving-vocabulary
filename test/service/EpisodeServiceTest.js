@@ -88,6 +88,8 @@ exports.stack = function(t){
         
         thenReprocess = function() {
             episodeService.reprocessWords(1).done(function(result) {
+                
+                console.log(result);
                 assert.ok(1, result, 'Id 1 reprocessed');
                 thenThereAreWords();
             });
