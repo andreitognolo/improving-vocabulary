@@ -1,6 +1,6 @@
 function Episode() {
 
-    this.collection = 'episodes';
+    this.collection = 'episode';
 	
 	this.id = undefined;
 	
@@ -22,6 +22,7 @@ Episode.prototype = {
 		
 		return words;
 	}
+    
 }
 
 exports.newEpisode = function() {

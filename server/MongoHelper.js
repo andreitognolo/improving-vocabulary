@@ -35,7 +35,7 @@ function reset(cb) {
         var collections = [];
         for(var i=0; i< files.length; i++){
             var domainName = files[i].replace(".js", "");
-            var collectionName = domainUtil.entityCollection(domainName);
+            var collectionName = domainUtil.collectionsName(domainName);
             collections.push(collectionName);
         }
         
