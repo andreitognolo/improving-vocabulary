@@ -1,6 +1,6 @@
 function EntityTest() {
 
-	this.collection = 'EntityTest';
+	this.collection = 'entity-test';
 	this.id = undefined;
 	this.a = undefined;
 	this.b = undefined;

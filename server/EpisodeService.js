@@ -129,7 +129,9 @@ exports.reprocessWords = function(episodeId) {
         done : function(callback) {
             var MongoHelper = require('./MongoHelper');
             var db = MongoHelper.db;
-            var collection = db.collection('episodes');
+            var collectionName = require('./util/DomainUtil').collectionsName("Episode");
+            //RENATO - We need do this in here? Why not Storage?
+            var collection = db.collection(collectionName);
             collection.find({id: episodeId}).toArray(function(err, episodesFromDB) {
                 var episode = episodesFromDB[0];
                 if (!episode.sentences) {

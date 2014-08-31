@@ -1,5 +1,5 @@
 var DOMAIN_DIR = './domain/';
-var DomainUtil = require('./domain/DomainUtil');
+var DomainUtil = require('./util/DomainUtil');
 
 
 function newEntityClass(entityClass){
@@ -55,7 +55,7 @@ exports.query = function(entityClass){
     var done = function(callback){
         var mongoHelper = require('./MongoHelper');
         var db = mongoHelper.db;
-        var collectionName = mongoHelper.entityCollection(entityClass);
+        var collectionName = DomainUtil.collectionsName(entityClass);
         var col = db.collection(collectionName);
         var cursor = col.find(opts.query);
 
@@ -90,7 +90,7 @@ exports.query = function(entityClass){
 exports.findById = function(entityClass, id) {
 	
 	var mongoHelper = require('./MongoHelper');
-     var collectionName = mongoHelper.entityCollection(entityClass);
+     var collectionName = DomainUtil.collectionsName(entityClass);
 	
 	return {
 		done: function(callback) {

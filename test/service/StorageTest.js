@@ -30,7 +30,7 @@ exports.stack = function(t){
 		Storage.put(e).done(function() {
 			Storage.findById('EntityTest', id).done(function(entityFromDatabase) {
 				assert.equal(id, entityFromDatabase.id);
-				assert.equal('EntityTest', entityFromDatabase.collection);
+				assert.equal('entity-test', entityFromDatabase.collection);
 				assert.deepEqual(['a', 'b'], entityFromDatabase.list);
 				assert.equal(30, entityFromDatabase.c);
 				t.start();
@@ -50,7 +50,7 @@ exports.stack = function(t){
             Storage.query('EntityTest').find({a:{$gt:5}}).done(function(list){
                 var entityFromDatabase = list[0];
 				assert.equal(id, entityFromDatabase.id);
-				assert.equal('EntityTest', entityFromDatabase.collection);
+				assert.equal('entity-test', entityFromDatabase.collection);
 				assert.deepEqual(['a', 'b'], entityFromDatabase.list);
 				assert.equal(30, entityFromDatabase.c);
 				t.start();

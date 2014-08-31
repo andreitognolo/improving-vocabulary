@@ -6,6 +6,7 @@ before_install: pwd;
 install: npm install;
 before_script: ./cmds/ci/before_script.sh
 script: npm test;
+after_script: ./cmds/ci/after_script.sh
 services:
   - mongodb
 notifications:

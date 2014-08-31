@@ -11,7 +11,6 @@ var EpisodeService = require('./server/EpisodeService.js');
 
 function processStatic(uri, request, response) {
 	var filename = path.join(process.cwd(), uri);
-
 	fs.exists(filename, function(exists) {
 		if (!exists) {
 			response.writeHead(404, {
