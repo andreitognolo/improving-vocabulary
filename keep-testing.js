@@ -37,7 +37,7 @@ function listener(path){
 }
 
 
-function addWatcherSingleFile(path){
+function addWatcherFile(path){
     fs.stat(path, function(er, stats){
         if(er){
             throw er;    
@@ -55,7 +55,7 @@ function addWatcherDirectory(name){
     function readFiles(err, files){
         for(var i=0; i < files.length; i++){
             var path = name + "/" + files[i];
-            addWatcherSingleFile(path, files);
+            addWatcherFile(path, files);
         }
     }
     fs.readdir(name, readFiles);
@@ -63,5 +63,5 @@ function addWatcherDirectory(name){
 
 addWatcherDirectory("./test");
 addWatcherDirectory("./server");
-addWatcherSingleFile("./keep-testing.js");
+addWatcherFile("./keep-testing.js");
 listener(test)();
