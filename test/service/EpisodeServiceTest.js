@@ -3,7 +3,7 @@ var episodeService = require(HOME + '/server/EpisodeService');
 var Episode = require(HOME + '/server/domain/Episode');
 var Storage = require(HOME + '/server/Storage');
 var MongoHelper = require(HOME + '/server/MongoHelper');
-
+var DomainUtil = require(HOME + '/server/util/DomainUtil');
 
 exports.stack = function(t){
 
@@ -60,7 +60,7 @@ exports.stack = function(t){
     function reprocessWords(assert) {
        var createEpisodeWithoutWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection('episodes');
+                var collection = db.collection( DomainUtil.collectionsName("Episode"));
                 collection.update({
                     id: 1,
                 }, {
@@ -77,7 +77,7 @@ exports.stack = function(t){
         
        var thenThereAreNoWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection('episodes');
+                var collection = db.collection( DomainUtil.collectionsName("Episode"));
                 collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
                     db.close();
                     assert.ok(!result.length);
