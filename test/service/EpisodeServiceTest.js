@@ -20,7 +20,7 @@ exports.stack = function(t){
 				var episodeRecorded = json[0];
 				assert.equal(1, episodeRecorded.id);
 				assert.equal(true, episodeRecorded.transcripted);
-                assert.deepEqual([ 'HI', 'DAD!', 'HI!', 'CALVIN' ], episodeRecorded.words);
+                assert.deepEqual([ 'HI', 'DAD', 'HI', 'CALVIN' ], episodeRecorded.words);
                 assert.deepEqual([ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ], episodeRecorded.sentences);
 				t.start();
 			});
@@ -34,7 +34,7 @@ exports.stack = function(t){
 
             assert.equal(1, episodeRecorded.id);
             assert.equal(true, episodeRecorded.transcripted);
-            assert.deepEqual([ 'HI', 'DAD!', 'HI!', 'CALVIN' ], episodeRecorded.words);
+            assert.deepEqual([ 'HI', 'DAD', 'HI', 'CALVIN' ], episodeRecorded.words);
             assert.deepEqual([ { character : "CALVIN", sentence : "HI DAD!" }, { character : "PAI", sentence : "HI! CALVIN" } ], episodeRecorded.sentences);
             t.start();
         }

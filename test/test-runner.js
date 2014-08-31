@@ -11,7 +11,7 @@ t.log(function( details ) {
         var error = ("[TEST FAILED: " + details.module + " - " + details.name + " ] ").red;
         console.error(error, "EXPECTED:", details.expected);
         console.error(error, "ACTUAL:", details.actual);
-        console.error(error, "STACK:", details.source);
+        console.error(error, "STACK:\n", details.source);
         console.error(error, "MESSAGE:", details.message);
     }
 });
