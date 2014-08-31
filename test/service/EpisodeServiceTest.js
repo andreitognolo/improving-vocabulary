@@ -58,7 +58,7 @@ exports.stack = function(t){
 	}
     
     function reprocessWords(assert) {
-        createEpisodeWithoutWords = function() {
+       var createEpisodeWithoutWords = function() {
             MongoHelper.connect(function(db) {
                 var collection = db.collection('episodes');
                 collection.update({
@@ -75,7 +75,7 @@ exports.stack = function(t){
             });
         }();
         
-        thenThereAreNoWords = function() {
+       var thenThereAreNoWords = function() {
             MongoHelper.connect(function(db) {
                 var collection = db.collection('episodes');
                 collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
@@ -86,16 +86,14 @@ exports.stack = function(t){
             });
         }
         
-        thenReprocess = function() {
+        var thenReprocess = function() {
             episodeService.reprocessWords(1).done(function(result) {
-                
-                console.log(result);
                 assert.ok(1, result, 'Id 1 reprocessed');
                 thenThereAreWords();
             });
         }
         
-        thenThereAreWords = function() {
+        var thenThereAreWords = function() {
             MongoHelper.connect(function(db) {
                 var collection = db.collection('episodes');
                 collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
