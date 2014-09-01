@@ -60,7 +60,7 @@ exports.stack = function(t){
     function reprocessWords(assert) {
        var createEpisodeWithoutWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection( DomainUtil.collectionsName("Episode"));
+                var collection = db.collection("episodes");
                 collection.update({
                     id: 1,
                 }, {
