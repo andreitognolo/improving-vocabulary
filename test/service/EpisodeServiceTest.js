@@ -77,7 +77,7 @@ exports.stack = function(t){
         
        var thenThereAreNoWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection("episodes");
+                var collection = db.collection(DomainUtil.collectionsName("Episode"));
                 collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
                     db.close();
                     assert.ok(!result.length, "result length empty");
@@ -95,7 +95,7 @@ exports.stack = function(t){
         
         var thenThereAreWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection(DomainUtil.collectionsName("Episode"));
+                var collection = db.collection("episodes");
                 collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
                     db.close();
                     assert.ok(result.length, "result length not empty");
