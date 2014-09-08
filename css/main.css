@@ -68,15 +68,11 @@ div.word {
   padding: 0 10px;
   border: medium none;
   border-radius: 7px;
-  background: none repeat scroll 0 0 #428bca;
-}
-
-div.word {
-  
+  background: none repeat scroll 0 0 #CCCCCC;
 }
 
 div.word.selected {
-  background: none repeat scroll 0 0 #CCCCCC;
+  background: none repeat scroll 0 0 #428bca;
   color: #fff;
   font-weight: bold;
 }
