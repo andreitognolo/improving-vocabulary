@@ -60,7 +60,7 @@ exports.stack = function(t){
     function reprocessWords(assert) {
        var createEpisodeWithoutWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection( DomainUtil.collectionsName("Episode"));
+                var collection = db.collection(DomainUtil.collectionsName("Episode"));
                 collection.update({
                     id: 1,
                 }, {
@@ -77,7 +77,7 @@ exports.stack = function(t){
         
        var thenThereAreNoWords = function() {
             MongoHelper.connect(function(db) {
-                var collection = db.collection( DomainUtil.collectionsName("Episode"));
+                var collection = db.collection(DomainUtil.collectionsName("Episode"));
                 collection.find({'words': {$in : ['aaaa']}}).toArray(function(err, result) {
                     db.close();
                     assert.ok(!result.length, "result length empty");
