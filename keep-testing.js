@@ -4,6 +4,10 @@ var Notification = require('node-notifier');
 
 var test = process.argv[2];
 
+if(test.match(/test\/.*/)){
+    test = test.replace(/test\//, './');   
+}
+
 if(!test){
     console.log("[SCRIPT USAGE]".yellow);
     console.log("nodejs keep-testing.js ./util/DomainUtilTest".yellow);
