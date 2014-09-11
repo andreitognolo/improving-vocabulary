@@ -144,6 +144,7 @@ exports.stack = function(t){
             var data = { previousEpisodeId : 1 , array : [ "HI" ] }
             episodeService.next(data).done(function(result){
                 assert.equal(result.id, 3);
+                assert.deepEqual(result.wordsFound, [ "HI" ]);
                 t.start();
             });
         }

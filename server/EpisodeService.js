@@ -1,6 +1,7 @@
 exports.next = function(data) {
 	return {
 		done : function(callback) {
+            var WordsUtil = require('./util/WordsUtil');
             var Storage = require('./Storage');
             var query = {
                 id : { $gt : parseInt(data.previousEpisodeId) },
@@ -12,15 +13,20 @@ exports.next = function(data) {
             }
             
             Storage.query('Episode').find(query).done(function(results){
+                function retriveResult(result){
+                    result.wordsFound = WordsUtil.intersection(data.array, result.words);
+                    callback(result);
+                }
+                
                 if(results.length){
-                    callback(results[0]);
+                    retriveResult(results[0]);
                     return;
                 }
                 
                 if(query.words && query.words.$in.length){
                     delete query.words;
                     Storage.query('Episode').find(query).done(function(res){
-                        callback(res[0]);
+                       retriveResult(res[0]);
                     });
                 }
             });
