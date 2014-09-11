@@ -71,13 +71,20 @@ div.word {
   background: none repeat scroll 0 0 #CCCCCC;
 }
 
+div.word.doubted.selected,
 div.word.selected {
   background: none repeat scroll 0 0 #428bca;
   color: #fff;
   font-weight: bold;
 }
 
+div.word.doubted {
+  background: none repeat scroll 0 0 #b0e324;
+  color: #fff;
+  font-weight: bold;
+}
+
 div.paragraph {
-  vertical-align: middle;
+  vertical-align: midele;
   height: 40px;
 }

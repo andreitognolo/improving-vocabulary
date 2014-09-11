@@ -51,6 +51,8 @@
                         
                         var data = { previousEpisodeId : episodeId, array: array };
                         $.iyvc.nextEpisode(data, function(episode){
+                            //Renato - Tomorrow I will fix this!!!! Sorry about this mess...
+                            window.wordsFound = episode.wordsFound;
                             location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
                         });
                     }
@@ -91,6 +93,19 @@
                                 }
                                $(this).addClass('selected');
                            });
+                            
+                           //Renato - Tomorrow I will fix this!!!! Sorry about this mess...
+                           page.find('.word').each(function(){
+                               var word = $(this).html();
+                               if(window.wordsFound){
+                                    for(var i = 0; $.oplt(i, window.wordsFound.length); i++ ){
+                                        if($.wordsMatch(window.wordsFound[i], word)){
+                                          $(this).addClass("doubted");  
+                                        }
+                                    }
+                               }
+                           });
+                            
                         } else {
                             $.warning('Esse episodio ainda nao foi transcrito!', 10000);
                         }

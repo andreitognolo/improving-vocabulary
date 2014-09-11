@@ -41,5 +41,11 @@
 		}
 		return array.join("&");
 	}
+    
+    $.wordsMatch = function(w1, w2){
+        w1 = w1.replace(/[^a-zA-Z]*/g, ''); 
+        w2 = w2.replace(/[^a-zA-Z]*/g, '');
+        return w1 === w2;
+    }
 
 })(jQuery);
