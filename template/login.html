@@ -1,0 +1,28 @@
+<section class="windfury">
+    <script type="application/javascript">
+        (function($, wf){
+            function User(){
+                this.lastEpisodeWords = [];
+                this.historyWords = [];
+                this.historyEpisodes = [];
+            }
+            
+            User.prototype.readEpisode = function(episode){
+                this.lastEpisodeWords = episode.wordsFound;
+                this.historyWords.push(episode.wordsFound);
+                this.historyEpisodes.push(episode.id);
+            }
+            
+            var _user = new User();
+            
+            function user(){
+                return _user;   
+            }
+            
+            wf.def({
+                user: user
+            });
+            
+        })(jQuery, windfury);
+    </script>
+</section>

@@ -29,7 +29,7 @@
     
 	<script>
         (function($, wf){
-            $.wf(['template/base.html'], function(base){
+            $.wf(['template/base.html', 'template/login.html'], function(base, login){
                 var tPage = wf.doT(".episode");
                 var tSentence = wf.doT(".sentence");
                 
@@ -51,8 +51,7 @@
                         
                         var data = { previousEpisodeId : episodeId, array: array };
                         $.iyvc.nextEpisode(data, function(episode){
-                            //Renato - Tomorrow I will fix this!!!! Sorry about this mess...
-                            window.wordsFound = episode.wordsFound;
+                            login.user().readEpisode(episode);
                             location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
                         });
                     }
@@ -93,15 +92,14 @@
                                 }
                                $(this).addClass('selected');
                            });
+                        
                             
-                           //Renato - Tomorrow I will fix this!!!! Sorry about this mess...
+                           var words = login.user().lastEpisodeWords;
                            page.find('.word').each(function(){
                                var word = $(this).html();
-                               if(window.wordsFound){
-                                    for(var i = 0; $.oplt(i, window.wordsFound.length); i++ ){
-                                        if($.wordsMatch(window.wordsFound[i], word)){
-                                          $(this).addClass("doubted");  
-                                        }
+                               for(var i = 0; $.oplt(i, words.length); i++ ){
+                                    if($.wordsMatch(words[i], word)){
+                                      $(this).addClass("doubted");  
                                     }
                                }
                            });
