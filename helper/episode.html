@@ -1,0 +1,54 @@
+<section class="windfury">
+    <section class="sentence">
+        {{~it : sentence}}
+            <div class="paragraph">
+                <div class="bold">{{!sentence.character}}:</div> 
+                {{~sentence.splited : splited}}
+                    <div class="word">{{!splited}}</div>
+                {{~}}
+            </div>
+        {{~}}
+    </section>
+    
+    <script type="application/javascript">
+        (function($, wf){
+            $.wf([ 'template/login.html'], function(login){
+                var tSentence = wf.doT(".sentence");
+
+                function splitSentence(sentences){
+                    for(var i=0; $.oplt(i, sentences.length); i++){
+                        sentences[i].splited = sentences[i].sentence.split(" ");
+                    }
+                    return sentences;
+                }
+
+                function words(sentences){
+                    sentences = splitSentence(sentences);
+                    var div = $(tSentence(sentences));
+                    div.find('.word').click(function(){
+                            if($(this).hasClass('selected')){
+                                $(this).removeClass('selected');
+                                return true;
+                            }
+                           $(this).addClass('selected');
+                    });
+
+                    var words = login.user().lastEpisodeWords;
+                    div.find('.word').each(function(){
+                       var word = $(this).html();
+                       for(var i = 0; $.oplt(i, words.length); i++ ){
+                            if($.wordsMatch(words[i], word)){
+                              $(this).addClass("doubted");  
+                            }
+                       }
+                    });
+                    return div;
+                }
+
+                wf.def({
+                    words : words
+                });
+            });
+        })(jQuery, windfury);
+    </script>
+</section>

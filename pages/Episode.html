@@ -16,23 +16,11 @@
         </div>
 	</section>
     
-    <section class="sentence">
-        {{~it : sentence}}
-            <div class="paragraph">
-                <div class="bold">{{!sentence.character}}:</div> 
-                {{~sentence.splited : splited}}
-                    <div class="word">{{!splited}}</div>
-                {{~}}
-            </div>
-        {{~}}
-    </section>
-    
 	<script>
         (function($, wf){
-            $.wf(['template/base.html', 'template/login.html'], function(base, login){
+            $.wf(['template/base.html', 'template/login.html', 'helper/episode.html'], function(base, login, episodeHelper){
                 var tPage = wf.doT(".episode");
-                var tSentence = wf.doT(".sentence");
-                
+
                 function open(){
                     var page = $(tPage())
                     base.open(page);
@@ -74,14 +62,6 @@
                         return;
                     }
                     
-                    function splitSentence(episode){
-                        var sentences = episode.sentences;
-                        for(var i=0; $.oplt(i, sentences.length); i++){
-                            sentences[i].splited = sentences[i].sentence.split(" ");
-                        }
-                        return episode;
-                    }
-                    
                     var data = {id:episodeId};
                     $.iyvc.findEpisodes(data, function(episodes){
                         var episode = episodes[0];
@@ -89,33 +69,13 @@
                         login.user().pushEpisode(episode);
                         
                         page.find('.episode').html('<img src="img/calvin-hobbes/' + episode.id + '.gif" />');
-
-                        if (episode.sentences) {
-                           episode = splitSentence(episode);
-                           page.find('.sentences').html(tSentence(episode.sentences));
-                           page.find('.word').click(function(){
-                                if($(this).hasClass('selected')){
-                                    $(this).removeClass('selected');
-                                    return true;
-                                }
-                               $(this).addClass('selected');
-                           });
                         
-                            
-                           var words = login.user().lastEpisodeWords;
-                           page.find('.word').each(function(){
-                               var word = $(this).html();
-                               for(var i = 0; $.oplt(i, words.length); i++ ){
-                                    if($.wordsMatch(words[i], word)){
-                                      $(this).addClass("doubted");  
-                                    }
-                               }
-                           });
-                            
+                        if (episode.sentences) {
+                           page.find('.sentences').html(episodeHelper.words(episode.sentences));
                         } else {
                             $.warning('Esse episodio ainda nao foi transcrito!', 10000);
                         }
-
+                        
                         page.find('.next').click(clickNext);
                         page.find('.previous').click(clickPrevious);
                         page.find('.transcription').click(clickTranscription);
