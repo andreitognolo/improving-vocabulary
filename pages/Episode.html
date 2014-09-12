@@ -49,10 +49,15 @@
                             array.push($(this).html());
                         });
                         
-                        var data = { previousEpisodeId : episodeId, array: array };
+                        var data = { array: array, userInfo: login.user().userObject() };
                         $.iyvc.nextEpisode(data, function(episode){
-                            login.user().readEpisode(episode);
-                            location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
+                            if(episode.id){
+                                login.user().readEpisode(episode);
+                                location = location.hash.split('?')[0] + '?episodeId=' + episode.id;
+                                return;
+                            }
+                            $.warning('Acreditamos que voce ja leu todas tirinhas transcritas!! Ajude-nos a transcrever', 10000);
+                            location = "#Transcription"
                         });
                     }
 
@@ -80,6 +85,9 @@
                     var data = {id:episodeId};
                     $.iyvc.findEpisodes(data, function(episodes){
                         var episode = episodes[0];
+                        
+                        login.user().pushEpisode(episode);
+                        
                         page.find('.episode').html('<img src="img/calvin-hobbes/' + episode.id + '.gif" />');
 
                         if (episode.sentences) {

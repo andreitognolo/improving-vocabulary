@@ -8,9 +8,30 @@
             }
             
             User.prototype.readEpisode = function(episode){
-                this.lastEpisodeWords = episode.wordsFound;
-                this.historyWords.push(episode.wordsFound);
-                this.historyEpisodes.push(episode.id);
+                var wordsFound = episode.wordsFound || [];
+                this.lastEpisodeWords = wordsFound;
+                
+                for(var i=0; $.oplt(i, wordsFound.length); i++){
+                    if(this.historyWords.indexOf(wordsFound[i]) === -1){
+                        this.historyWords.push(wordsFound[i]);
+                    }
+                }
+                
+                this.pushEpisode(episode);
+            }
+            
+            User.prototype.pushEpisode = function(episode){
+                if(this.historyEpisodes.indexOf(episode.id) === -1){
+                    this.historyEpisodes.push(episode.id);
+                }
+            }
+            
+            User.prototype.userObject = function(){
+                return {
+                    lastEpisodeWords:this.lastEpisodeWords,
+                    historyWords:this.historyWords,
+                    historyEpisodes:this.historyEpisodes
+                }
             }
             
             var _user = new User();

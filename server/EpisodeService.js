@@ -3,17 +3,27 @@ exports.next = function(data) {
 		done : function(callback) {
             var WordsUtil = require('./util/WordsUtil');
             var Storage = require('./Storage');
+            
+            var userInfo = data.userInfo;
+            
             var query = {
-                id : { $gt : parseInt(data.previousEpisodeId) },
+                id : { $nin : userInfo.historyEpisodes },
                 transcripted : true
             }
             
             if(data.array && data.array.length){
+              var cleanedArray = [];
+              for(var i =0; i < data.array.length; i++){
+                  cleanedArray.push(WordsUtil.clearWord(data.array[i]));
+              }
+              data.array = cleanedArray;
               query.words = { $in : data.array };
             }
             
             Storage.query('Episode').find(query).done(function(results){
                 function retriveResult(result){
+                    result.words = result.words || [];
+                    data.array = data.array || [];
                     result.wordsFound = WordsUtil.intersection(data.array, result.words);
                     callback(result);
                 }
@@ -23,12 +33,14 @@ exports.next = function(data) {
                     return;
                 }
                 
-                if(query.words && query.words.$in.length){
-                    delete query.words;
-                    Storage.query('Episode').find(query).done(function(res){
-                       retriveResult(res[0]);
-                    });
-                }
+                delete query.words;
+                Storage.query('Episode').find(query).done(function(res){
+                   if(res.length){
+                    retriveResult(res[0]);
+                    return;
+                   }
+                   retriveResult({});
+                });
             });
 		}
 	}

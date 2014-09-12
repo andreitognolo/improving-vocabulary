@@ -1,7 +1,7 @@
 exports.words = function(sentence) {
 	var words = sentence.split(' ');
 	words = words.map(function(word) {
-		return word.replace(/[^a-zA-Z]*/g, '');
+		return exports.clearWord(word);
 	});
 	return words;
 }
@@ -16,4 +16,8 @@ exports.intersection = function(l1, l2){
         }
     }
     return intersection;
+}
+
+exports.clearWord = function(word){
+    return word.replace(/[^a-zA-Z]*/g, '');
 }
