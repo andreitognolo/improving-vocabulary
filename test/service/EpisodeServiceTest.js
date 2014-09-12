@@ -141,7 +141,7 @@ exports.stack = function(t){
     
     function nextEpisode(assert){
         var nextEpisode = function(){
-            var data = { previousEpisodeId : 1 , array : [ "HI" ] }
+            var data = {  array : [ "HI" ], userInfo: { historyEpisodes : [1] }}
             episodeService.next(data).done(function(result){
                 assert.equal(result.id, 3);
                 assert.deepEqual(result.wordsFound, [ "HI" ]);
