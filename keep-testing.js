@@ -68,4 +68,5 @@ function addWatcherDirectory(name){
 addWatcherDirectory("./test");
 addWatcherDirectory("./server");
 addWatcherFile("./keep-testing.js");
+addWatcherFile("./Server.js");
 listener(test)();
