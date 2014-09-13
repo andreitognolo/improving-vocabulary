@@ -10,8 +10,7 @@ exports = (function (exports){
 
     function Server(){
         this.filters = [];
-        this.paths = [];
-        this.statics = [];
+        this.actions = [];
 
         function serverCallback(req, resp){
             var uri = url.parse(request.url).pathname;
@@ -20,33 +19,27 @@ exports = (function (exports){
         this.server = http.createServer(serverCallback);
     }
 
-    Server.prototype.dynamic = function(path, action){
+    Server.prototype.action = function(path, action){
         if(!action){
-            return _findActionByPath(this.paths, path);
+            return _findActionByPath(this.actions, path);
         }
         
-        this.paths.push({
+        this.actions.push({
             path: path,
             action: action
         });
         
-        this.paths= this.paths.sort().reverse();
-    }
-
-    Server.prototype.static = function(path, action){
-        if(!action){
-            return _findActionByPath(this.statics, path);
+        function _sort(a, b){
+          if (a.path < b.path)
+             return -1;
+          if (a.path > b.path)
+            return 1;
+          return 0;
         }
         
-        this.statics.push({
-            path: path,
-            action: action
-        });
-        
-        console.log(this.statics);
-        this.statics = this.statics.sort().reverse();
-        console.log(this.statics);
+        this.actions = this.actions.sort(_sort).reverse();
     }
+    
 
     Server.prototype.filter = function(filt){
         this.filters.push(filt);
