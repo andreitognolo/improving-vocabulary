@@ -1,22 +1,47 @@
 exports = (function (exports){
     var http = require("http");
     var url = require("url");
-    var path = require("path");
-    var fs = require("fs");
-    var qs = require('querystring');
+    
+    function Result(uri, req, resp){
+        this.req = req;
+        this.resp = resp;
+        this.uri = uri;
+    }
 
-    var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-    var ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+    Result.prototype.sendTextError = function(errorCode, error){
+        this.resp.statusCode = errorCode;
+        this.resp.setHeader("Content-Type", "text/plain");
+        this.resp.write("404 Not Found\n");
+		this.resp.end();
+    }    
+    
+    Result.prototype.header = function(filename){
+         if(filename.indexOf('.html') >= 0){
+            return "text/html";   
+        }
+    }   
+    
+    Result.prototype.sendSuccess = function(body, contentType){
+        this.resp.statusCode = 200;
+        if(contentType){
+            this.resp.setHeader("Content-Type", "text/html");
+        }
+        this.resp.write(body, "binary");
+        this.resp.end();
+    }
 
     function Server(){
         this.filters = [];
         this.actions = [];
 
-        function serverCallback(req, resp){
-            var uri = url.parse(request.url).pathname;
+        var _me = this;
+        function _serverCallback(req, resp){
+            var uri = url.parse(req.url).pathname;
+            var action = _me.action(uri);
+            action(new Result(uri, req, resp));
         }
 
-        this.server = http.createServer(serverCallback);
+        this.server = http.createServer(_serverCallback);
     }
 
     Server.prototype.action = function(path, action){
@@ -45,8 +70,11 @@ exports = (function (exports){
         this.filters.push(filt);
     }
 
-    Server.prototype.listen = function(port){
-        this.server.listen(parseInt(port, 10), ip_address);
+    Server.prototype.listen = function(port, ip){
+        this.server.listen(port, ip);
+        console.log("Static file server running at");
+        console.log("http://localhost:", port);
+        console.log("CTRL + C to Shutdown");
     }
     
     function _findActionByPath(list, path){
