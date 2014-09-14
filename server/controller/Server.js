@@ -10,7 +10,7 @@ function Server(){
     function _serverCallback(req, resp){
         var uri = url.parse(req.url).pathname;
         var action = _me.action(uri);
-        action(Result.result(uri, req, resp));
+        action(Result.result(req, resp));
     }
 
     this.server = http.createServer(_serverCallback);

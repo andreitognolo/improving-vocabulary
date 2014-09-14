@@ -1,7 +1,13 @@
-function Result(uri, req, resp){
+var url = require("url");
+
+function Result(req, resp){
     this.req = req;
     this.resp = resp;
-    this.uri = uri;
+
+    var urlParsed = url.parse(req.url);
+    this.uri = urlParsed.pathname;
+    this.urisArgs = this.uri.split('/');
+    this.urisParams = require('querystring').parse(urlParsed.query);
 }
 
 Result.prototype.sendTextError = function(errorCode, error){
@@ -27,7 +33,7 @@ Result.prototype.sendSuccess = function(body, contentType){
 }
 
 Result.prototype.urlArg = function(index){
-    return this.uri.split('/')[index];
+    return this.urisArgs[index];
 }
 
 Result.prototype.onReceivedData = function(cb){
@@ -41,9 +47,8 @@ Result.prototype.onReceivedData = function(cb){
             cb(body); 
         });
     } else if(this.req.method === "GET"){
-        var params = require('../util/querystring').params(this.req.url);
-        if (params.data) {
-            body = params.data[0];
+        if (this.urisParams.data) {
+            body = this.urisParams.data;
         }
         cb(body); 
     }
