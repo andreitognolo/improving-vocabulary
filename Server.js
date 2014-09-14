@@ -11,7 +11,7 @@ exports = (function (exports){
     Result.prototype.sendTextError = function(errorCode, error){
         this.resp.statusCode = errorCode;
         this.resp.setHeader("Content-Type", "text/plain");
-        this.resp.write("404 Not Found\n");
+        this.resp.write(error);
 		this.resp.end();
     }    
     
