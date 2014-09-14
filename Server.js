@@ -29,6 +29,29 @@ exports = (function (exports){
         this.resp.write(body, "binary");
         this.resp.end();
     }
+    
+    Result.prototype.urlArg = function(index){
+        return this.uri.split('/')[index];
+    }
+    
+    Result.prototype.onReceivedData = function(cb){
+        var body = "";
+        if(this.req.method === "POST"){
+              this.req.on('data', function(data){
+                body+=data;
+              });
+
+              this.req.on('end', function(){
+                 cb(body); 
+              });
+        } else if(this.req.method === "GET"){
+              var params = require('./server/util/querystring').params(this.req.url);
+              if (params.data) {
+                  body = params.data[0];
+              }
+              cb(body); 
+        }
+    }
 
     function Server(){
         this.filters = [];

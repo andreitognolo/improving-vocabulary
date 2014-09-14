@@ -29,47 +29,25 @@ function processStatic(resp) {
 }
 
 function processService(resp) {
-    var uri = resp.uri, req = resp.req, response = resp.resp;
-    
-	response.writeHead(200, {
-		"Content-Type" : "text/json"
-	});
-	var service = uri.split('/')[2];
-	var func = uri.split('/')[3];
-	
-	var body = '';
-	if (req.method == 'POST') {
-	    req.on('data', function (data) {
-	        body += data;
-	    });
-	    
-	    req.on('end', function () {
-	    	callservice(body, service, func, response);
-	    });
-	} else {
-		var params = require('./server/util/querystring').params(req.url);
-		if (params.data) {
-			body = params.data[0];
-		}
-		callservice(body, service, func, response);
-	}
-}
-
-function callservice(body, service, func, response) {
-    console.log('callservice - ', service , "Service." + func);
-	if (body) {
-    	var ret = eval(service + "Service." + func).call(null, JSON.parse(body));
-    	ret.done(function(result) {
-            result = JSON.stringify(result);
-    		response.end(result || 'void');
-    	});
-    } else {
-    	var ret = eval(service + "Service." + func + "()");
-    	ret.done(function(result) {
-            result = JSON.stringify(result);
-    		response.end(result || 'void');
-    	});
-    }
+    resp.onReceivedData(function(body){
+        var serviceName = resp.urlArg(2);
+	    var funcName = resp.urlArg(3);
+        
+        console.log('callservice - ', serviceName , "Service." + funcName);
+        
+        var func = eval(serviceName + "Service." + funcName);
+        (function(){
+            if(body){
+                body = JSON.parse(body);
+            }
+            
+            var ret = func.apply(this, [ body ]);
+            ret.done(function(result){
+                result = JSON.stringify(result);
+                resp.sendSuccess(result || 'void', 'text/json');
+            });
+        })();
+    });
 }
 
 require('./server/MongoHelper').init(function() {
@@ -80,7 +58,6 @@ require('./server/MongoHelper').init(function() {
     } else {
         console.log('ixi... it is undefined');
     }
-    
     
     var serv = require('./Server').server();
     serv.action('/s', processService);
