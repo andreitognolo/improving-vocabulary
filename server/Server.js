@@ -45,7 +45,7 @@ exports = (function (exports){
                  cb(body); 
               });
         } else if(this.req.method === "GET"){
-              var params = require('./server/util/querystring').params(this.req.url);
+              var params = require('./util/querystring').params(this.req.url);
               if (params.data) {
                   body = params.data[0];
               }

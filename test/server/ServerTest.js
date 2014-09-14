@@ -1,5 +1,5 @@
 var HOME = './../..';
-var Server = require(HOME + '/Server.js');
+var Server = require(HOME + '/server/Server.js');
 
 exports.stack = function(t){
 

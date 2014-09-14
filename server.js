@@ -59,7 +59,7 @@ function startServer(){
     } 
     
     
-    var serv = require('./Server').server();
+    var serv = require('./server/Server').server();
     serv.action('/s', processService);
     serv.action('/', processStatic);
     serv.listen(parseInt(port, 10), ip_address);
