@@ -13,16 +13,8 @@ function Server(){
         var before = _me.before(uri);
         var action = _me.action(uri);
         
-        function exec(result){
-            return function(){
-                action(result);   
-            }
-        }
-        
-        if(before){
-            before( result, {
-                continue: exec(result) 
-            });
+        if(before.length > 0){
+            _execNext(result, action, before)();
             return;
         }
         action(result);
@@ -31,8 +23,26 @@ function Server(){
     this.server = http.createServer(_serverCallback);
 }
 
+function _execNext(result, action, nexts){
+    var next = nexts.shift();
+    return function(){
+        if(!next){
+            if(action){
+                action(result);
+            }
+        }else{
+            next.action(result, {
+                continue: _execNext(result, action, nexts)
+            });   
+        }
+    }
+}
+
 Server.prototype.action = function(path, action){
-    return _addPathToList(this.actions, path, action);
+    if(!action){
+        return _addPathToList(this.actions, path, action)[0].action;
+    }
+    return _addPathToList(this.actions, path, action).reverse();
 }
 
 
@@ -70,7 +80,7 @@ function _addPathToList(list, path, action){
         list.push(obj);   
     }
 
-    return list.sort(_sort).reverse();
+    return list.sort(_sort);
 }
 
 function _sort(a, b){
@@ -82,12 +92,14 @@ function _sort(a, b){
 }
 
 function _findActionByPath(list, path){
+    var arr = [];
     for(var i=0; i < list.length; i++){
         var obj = list[i];
         if(_startsWith(path, obj.path)){
-            return obj.action;
+            arr.push(obj);
         }
     }
+    return arr;
 }
 
 function _startsWith(uri, starts){
