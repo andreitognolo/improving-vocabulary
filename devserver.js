@@ -41,14 +41,14 @@ function startServer(){
 }
 
 require('./server/MongoHelper').init(function() {
-
+    
     var mongoHelper = require('./server/MongoHelper');
     if (mongoHelper.db) {
         console.log('database is not undefined');
     } else {
         console.log('ixi... it is undefined');
     }
-
+    
     startServer();
 });
 

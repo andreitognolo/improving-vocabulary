@@ -9,8 +9,23 @@ function Server(){
     var _me = this;
     function _serverCallback(req, resp){
         var uri = url.parse(req.url).pathname;
+        var result = Result.result(req, resp);
+        var before = _me.before(uri);
         var action = _me.action(uri);
-        action(Result.result(req, resp));
+        
+        function exec(result){
+            return function(){
+                action(result);   
+            }
+        }
+        
+        if(before){
+            before( result, {
+                continue: exec(result) 
+            });
+            return;
+        }
+        action(result);
     }
 
     this.server = http.createServer(_serverCallback);
@@ -73,8 +88,6 @@ function _findActionByPath(list, path){
             return obj.action;
         }
     }
-
-    throw "Ops, no action found";
 }
 
 function _startsWith(uri, starts){
