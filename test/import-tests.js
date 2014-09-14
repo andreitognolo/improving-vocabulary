@@ -5,7 +5,7 @@ exports.import = function(t){
 	test.push("./simple/simpleTest.js");
 	test.push("./util/DomainUtilTest.js");
 	test.push("./util/WordsUtilTest.js");
-	test.push("./server/ServerTest.js");
+	test.push("./controller/ServerTest.js");
 	
 	// MongoDB required
 	test.push("./service/EpisodeServiceTest.js");
