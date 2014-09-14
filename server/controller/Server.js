@@ -3,7 +3,7 @@ var url = require("url");
 var Result = require('./Result');
 
 function Server(){
-    this.filters = [];
+    this.befores = [];
     this.actions = [];
 
     var _me = this;
@@ -17,29 +17,12 @@ function Server(){
 }
 
 Server.prototype.action = function(path, action){
-    if(!action){
-        return _findActionByPath(this.actions, path);
-    }
-
-    this.actions.push({
-        path: path,
-        action: action
-    });
-
-    function _sort(a, b){
-        if (a.path < b.path)
-            return -1;
-        if (a.path > b.path)
-            return 1;
-        return 0;
-    }
-
-    this.actions = this.actions.sort(_sort).reverse();
+    return _addPathToList(this.actions, path, action);
 }
 
 
-Server.prototype.filter = function(filt){
-    this.filters.push(filt);
+Server.prototype.before = function(path, before){
+    return _addPathToList(this.befores, path, before);
 }
 
 Server.prototype.listen = function(port, ip){
@@ -47,6 +30,51 @@ Server.prototype.listen = function(port, ip){
     console.log("Static file server running at");
     console.log("http://localhost:", port);
     console.log("CTRL + C to Shutdown");
+}
+
+function _addPathToList(list, path, action){
+    if(!action){
+        return _findActionByPath(list, path);
+    }
+    
+    var index = -1;
+    for(var i=0; i<list.length; i++){
+        if(list[i].path === path){
+            index = i;
+        }
+    }
+    
+    var obj = {
+        path: path,
+        action: action
+    }
+    
+    if(index !== -1){
+        list[index].action = obj.action;
+    }else{
+        list.push(obj);   
+    }
+
+    return list.sort(_sort).reverse();
+}
+
+function _sort(a, b){
+    if (a.path < b.path)
+        return -1;
+    if (a.path > b.path)
+        return 1;
+    return 0;
+}
+
+function _findActionByPath(list, path){
+    for(var i=0; i < list.length; i++){
+        var obj = list[i];
+        if(_startsWith(path, obj.path)){
+            return obj.action;
+        }
+    }
+
+    throw "Ops, no action found";
 }
 
 function _startsWith(uri, starts){
@@ -78,18 +106,6 @@ function _startsWith(uri, starts){
     return true;
 }
 
-
-function _findActionByPath(list, path){
-
-    for(var i=0; i < list.length; i++){
-        var obj = list[i];
-        if(_startsWith(path, obj.path)){
-            return obj.action;
-        }
-    }
-
-    throw "Ops, no action found";
-}
 
 exports.server = function(){
     return new Server();   
