@@ -26,34 +26,29 @@ function processStatic(resp) {
 
 function processService(resp) {
     resp.onReceivedData(function(body){
-        var service;
-
         try{
-            service = require("./server/" + resp.urlArg(2) + "Service");
+            var service = require("./server/" + resp.urlArg(2) + "Service");
+
+            var func = service[resp.urlArg(3)];
+            if(!func){
+                resp.sendTextError(500, "Method not found");
+                return;
+            }
+
+            if(body){
+                body = JSON.parse(body);
+            }
+
+            var ret = func.apply(service, [ body ]);
+            ret.done(function(result){
+                result = JSON.stringify(result);
+                resp.sendSuccess(result || 'void', 'text/json');
+            });
         }catch(e){
             console.log(e);   
-        }
-
-        if(!service){
             resp.sendTextError(500, "Service not found");
             return;
         }
-
-        var func = service[resp.urlArg(3)];
-        if(!func){
-            resp.sendTextError(500, "Method not found");
-            return;
-        }
-
-        if(body){
-            body = JSON.parse(body);
-        }
-
-        var ret = func.apply(service, [ body ]);
-        ret.done(function(result){
-            result = JSON.stringify(result);
-            resp.sendSuccess(result || 'void', 'text/json');
-        });
     });
 } 
 
@@ -65,7 +60,7 @@ function mongoReset (resp, chain){
             resp.sendTextError(500, "Sorry!! Something went wrong!!!");
             return;
         }
-        
+
         chain.continue();
     });
 }

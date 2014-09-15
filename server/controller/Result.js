@@ -26,7 +26,7 @@ Result.prototype.header = function(filename){
 Result.prototype.sendSuccess = function(body, contentType){
     this.resp.statusCode = 200;
     if(contentType){
-        this.resp.setHeader("Content-Type", "text/html");
+        this.resp.setHeader("Content-Type", contentType);
     }
     this.resp.write(body, "binary");
     this.resp.end();
