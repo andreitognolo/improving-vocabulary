@@ -65,10 +65,24 @@ function mongoReset (resp, chain){
     });
 }
 
+
+function clearRequireCache(resp, chain){
+    for(var i in require.cache){
+        delete require.cache[i];   
+    }
+    chain.continue();
+}
+
 var serv = require('./server/controller/Server').server();
+if(process.argv[2] == "clearCache"){
+    console.log("Clear Require Cache Active");
+    serv.before('/', clearRequireCache);
+}
+
 serv.action('/s', processService);
 serv.before('/s', mongoReset);
 serv.action('/', processStatic);
 serv.listen(parseInt(port, 10), ip_address);
+
 
 
