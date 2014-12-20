@@ -4,7 +4,8 @@
   "description": "Improve Your Vocabulary",
   "main": "server.js",
   "dependencies": {
-    "mongodb": "~1.4.0"
+    "mongodb": "~1.4.0",
+    "node-sass": "1.0.3"
   },
   "devDependencies": {
     "qunitjs": "1.15.0",
