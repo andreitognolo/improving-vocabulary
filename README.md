@@ -14,3 +14,4 @@ Developer information
 - Configure dependencies: execute `npm install`
 - Run tests: execute `npm test`
 - Start server: execute `npm start`, then the server will be started at  `127.0.0.1:8080`
+
