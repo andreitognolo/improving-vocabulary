@@ -11,7 +11,7 @@ Project to help improve your vocabulary in english, with help of comics.
 Developer information
 ===================
 
+- Install mongo 2.4
 - Configure dependencies: execute `npm install`
 - Run tests: execute `npm test`
 - Start server: execute `npm start`, then the server will be started at  `127.0.0.1:8080`
-

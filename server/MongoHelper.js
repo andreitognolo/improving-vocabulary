@@ -11,11 +11,7 @@ function connect(cb) {
     var MongoClient = require('mongodb').MongoClient
     var mongoHost = process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1';
     var mongoIp = process.env.OPENSHIFT_MONGODB_DB_PORT || '27017';
-    var mongoUser = 'admin';
-    var mongoPassword = '4nVL27YyApru';
     var mongoURL = 'mongodb://' + mongoHost + ':' + mongoIp + '/improveyourvocabulary';
-
-    console.log('Connecting to: ', mongoURL);
 
     MongoClient.connect(mongoURL, function (err, db) {
         if (err)
