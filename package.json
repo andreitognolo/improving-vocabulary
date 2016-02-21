@@ -3,12 +3,8 @@
   "version": "0.0.1-SNAPSHOT",
   "description": "Improve Your Vocabulary",
   "main": "server.js",
-  "engines": {
-    "npm": "1.2.30"
-  },
   "dependencies": {
-    "mongodb": "~1.4.0",
-    "node-sass": "1.0.3"
+    "mongodb": "~1.4.0"
   },
   "devDependencies": {
     "colors": "0.6.2",
