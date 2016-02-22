@@ -102,7 +102,7 @@ exports.syncFiles = function (files, callback) {
   files.forEach(function (value) {
     Storage.findById('Episode', value).done(function (episode) {
       var year = parseInt(value.toString().substring(0, 4));
-      
+
       if (!episode) {
         episode = Episode.newEpisode();
       }

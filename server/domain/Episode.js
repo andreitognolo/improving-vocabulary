@@ -1,32 +1,32 @@
 function Episode() {
 
-    this.collection = 'episode';
-	
-	this.id = undefined;
+  this.collection = 'episode';
 
-	this.group = undefined;
-	
-	this.transcripted = undefined;
+  this.id = undefined;
 
-	this.sentences = [];
-	
+  this.group = undefined;
+
+  this.transcripted = undefined;
+
+  this.sentences = [];
+
 }
 
 Episode.prototype = {
-	
-	get words() {
-		var words = [];
-		var WordsUtil = require('../util/WordsUtil');
-		
-		this.sentences.forEach(function(sentence) {
-			words = words.concat(WordsUtil.words(sentence.sentence));
-		});
-		
-		return words;
-	}
-    
+
+  get words() {
+    var words = [];
+    var WordsUtil = require('../util/WordsUtil');
+
+    this.sentences.forEach(function (sentence) {
+      words = words.concat(WordsUtil.words(sentence.sentence));
+    });
+
+    return words;
+  }
+
 }
 
-exports.newEpisode = function() {
-	return new Episode();
+exports.newEpisode = function () {
+  return new Episode();
 };
