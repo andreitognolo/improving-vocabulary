@@ -99,15 +99,15 @@ exports.syncFiles = function (files, callback) {
   var Storage = require('./Storage');
   var Episode = require('./domain/Episode');
   var count = 0;
-  files.forEach(function (value) {
-    Storage.findById('Episode', value).done(function (episode) {
-      var year = parseInt(value.toString().substring(0, 4));
+  files.forEach(function (fileName) {
+    Storage.findById('Episode', fileName).done(function (episode) {
+      var year = parseInt(fileName.toString().substring(0, 4));
 
       if (!episode) {
-        episode = Episode.newEpisode();
+        episode = Episode.newEpisode(fileName);
       }
 
-      episode.id = value;
+      episode.id = fileName;
       episode.year = year;
       Storage.put(episode).done(function (result) {
         count++;

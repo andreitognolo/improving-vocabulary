@@ -1,3 +1,5 @@
+var RangeUtil = require('../util/RangeUtil');
+
 function Episode() {
 
   this.collection = 'episode';
@@ -27,6 +29,17 @@ Episode.prototype = {
 
 }
 
-exports.newEpisode = function () {
-  return new Episode();
+exports.newEpisode = function(fileName) {
+  var episode = new Episode();
+
+  // FIXME(Andrei) - It should raise an exception if fileName is not present
+  if (!fileName) return episode;
+
+  episode.id = fileName;
+
+  var min = RangeUtil.min(fileName);
+  var max = RangeUtil.max(fileName);
+  episode.group = min + '-' + max;
+
+  return episode;
 };
