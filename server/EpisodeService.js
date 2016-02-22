@@ -97,12 +97,12 @@ exports.sync = function (episodeId) {
 
 exports.syncFiles = function (files, callback) {
   var Storage = require('./Storage');
-  var mongoHelper = require('./MongoHelper');
   var Episode = require('./domain/Episode');
   var count = 0;
   files.forEach(function (value) {
     Storage.findById('Episode', value).done(function (episode) {
       var year = parseInt(value.toString().substring(0, 4));
+      
       if (!episode) {
         episode = Episode.newEpisode();
       }
