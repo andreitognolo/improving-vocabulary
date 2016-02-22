@@ -77,7 +77,7 @@ exports.sync = function (episodeId) {
 
   return {
     done: function (callback) {
-      fs.readdir('img/calvin-hobbes', function (err, files) {
+      fs.readdir('images/what-the-duck', function (err, files) {
         if (err) {
           throw 'Error: ' + err;
         }
