@@ -194,8 +194,8 @@ exports.find = function (params) {
     done: function (callback) {
       var Storage = require('./Storage');
       var query = {};
-      if (params.year) {
-        query.year = parseInt(params.year);
+      if (params.group) {
+        query.group = params.year;
       }
       if (params.id) {
         query.id = parseInt(params.id);

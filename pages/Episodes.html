@@ -2,9 +2,9 @@
 	<section class="episodes">
         <div>
             <select class="years">
-                <option value="1985">1985</option>
-                <option value="1986">1986</option>
-                <option value="1987">1987</option>
+                <option value="0001-0100">0001-0100</option>
+                <option value="0101-0200">0101-0200</option>
+                <option value="0201-0300">0201-0300</option>
             </select>
 
             <div class="list">
@@ -57,7 +57,8 @@
                     }
                     
                     var data = {
-                        "year" : year
+                        "year" : year,
+                        "group" : year
                     };
                     
                     $.iyvc.findEpisodes(data , function(result){
