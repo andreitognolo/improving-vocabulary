@@ -4,15 +4,15 @@ var Notification = require('node-notifier');
 
 var test = process.argv[2];
 
-if(test.match(/test\/.*/)){
-    test = test.replace(/test\//, './');   
-}
-
 if(!test){
     console.log("[SCRIPT USAGE]".yellow);
     console.log("nodejs keep-testing.js ./util/DomainUtilTest".yellow);
     console.log("[Test must be runned without ./test folder]".yellow);
     process.exit(0);
+}
+
+if(test.match(/test\/.*/)){
+    test = test.replace(/test\//, './');
 }
 
 function header(){

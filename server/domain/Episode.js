@@ -3,6 +3,10 @@ function Episode() {
     this.collection = 'episode';
 	
 	this.id = undefined;
+
+	this.year = undefined;
+
+	this.group = undefined;
 	
 	this.transcripted = undefined;
 
