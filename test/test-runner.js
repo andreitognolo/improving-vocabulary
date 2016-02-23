@@ -5,6 +5,7 @@ var MongoHelper = require(HOME + '/server/MongoHelper');
 
 var colors = require('colors');
 
+process.env.ENVIRONMENT = 'test';
 
 t.log(function (details) {
   if (!details.result) {

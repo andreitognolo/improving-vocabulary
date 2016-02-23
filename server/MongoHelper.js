@@ -6,10 +6,9 @@ function init(cb) {
 }
 
 function connect(cb) {
-  var MongoClient = require('mongodb').MongoClient
-  var mongoHost = process.env.OPENSHIFT_MONGODB_DB_HOST || '127.0.0.1';
-  var mongoIp = process.env.OPENSHIFT_MONGODB_DB_PORT || '27017';
-  var mongoURL = 'mongodb://' + mongoHost + ':' + mongoIp + '/improveyourvocabulary';
+  var MongoClient = require('mongodb').MongoClient;
+  var DatabaseConfiguration = require('./util/DatabaseConfiguration');
+  var mongoURL = DatabaseConfiguration.mongoURL();
 
   MongoClient.connect(mongoURL, function (err, db) {
     if (err)
