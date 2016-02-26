@@ -52,9 +52,9 @@ Server.prototype.before = function (path, before) {
 }
 
 Server.prototype.listen = function (port, ip) {
-  this.server.listen(port, ip);
+  this.server.listen(port);
   console.log("Static file server running at");
-  console.log("http://localhost:", port);
+  console.log("http://" + ip + ":" + port);
   console.log("CTRL + C to Shutdown");
 }
 

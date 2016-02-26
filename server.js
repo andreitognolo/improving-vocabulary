@@ -7,7 +7,7 @@ function processStatic(resp) {
     var filename = path.join(process.cwd(), resp.uri);
     fs.exists(filename, function(exists) {
         if (!exists) {
-            resp.sendTextError(404, "404 - Not Found");
+            resp.sendText(404, "404 - Not Found");
             return;
         }
 
@@ -16,12 +16,16 @@ function processStatic(resp) {
 
         fs.readFile(filename, "binary", function(err, file) {
             if (err) {
-                resp.sendTextError(500, err);
+                resp.sendText(500, err);
             }
             var contentType = resp.header(filename);
             resp.sendSuccess(file, contentType);
         });
     });
+}
+
+function pong(result) {
+    result.sendText(200, 'pong');
 }
 
 function processService(resp) {
@@ -31,7 +35,7 @@ function processService(resp) {
 
             var func = service[resp.urlArg(3)];
             if(!func){
-                resp.sendTextError(500, "Method not found");
+                resp.sendText(500, "Method not found");
                 return;
             }
 
@@ -46,7 +50,7 @@ function processService(resp) {
             });
         }catch(e){
             console.log(e);   
-            resp.sendTextError(500, "Service not found");
+            resp.sendText(500, "Service not found");
             return;
         }
     });
@@ -57,7 +61,7 @@ function mongoReset (resp, chain){
         var mongoHelper = require('./server/MongoHelper');
         if (!mongoHelper.db) {
             console.log("DB is undefined");
-            resp.sendTextError(500, "Sorry!! Something went wrong!!!");
+            resp.sendText(500, "Sorry!! Something went wrong!!!");
             return;
         }
 
@@ -79,10 +83,8 @@ if(process.argv[2] == "clearCache"){
     serv.before('/', clearRequireCache);
 }
 
+serv.action('/ping', pong);
 serv.action('/s', processService);
 serv.before('/s', mongoReset);
 serv.action('/', processStatic);
 serv.listen(parseInt(port, 10), ip_address);
-
-
-

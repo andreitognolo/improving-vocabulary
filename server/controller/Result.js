@@ -10,8 +10,8 @@ function Result(req, resp) {
   this.urisParams = require('querystring').parse(urlParsed.query);
 }
 
-Result.prototype.sendTextError = function (errorCode, error) {
-  this.resp.statusCode = errorCode;
+Result.prototype.sendText = function (statusCode, error) {
+  this.resp.statusCode = statusCode;
   this.resp.setHeader("Content-Type", "text/plain");
   this.resp.write(error);
   this.resp.end();
