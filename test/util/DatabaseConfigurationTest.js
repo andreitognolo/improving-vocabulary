@@ -17,9 +17,8 @@ exports.stack = function (t) {
     t.strictEqual(DatabaseConfiguration.mongoURL(), 'mongodb://127.0.0.1:27017/improveyourvocabulary-test');
   })
 
-  t.test('should return openshift connections when on openshift', function () {
-    process.env.OPENSHIFT_MONGODB_DB_HOST = '1.1.1.1';
-    process.env.OPENSHIFT_MONGODB_DB_PORT = '12345';
+  t.test('should return heroku connections when on heroku', function () {
+    process.env.MONGOLAB_URI = 'mongodb://1.1.1.1:12345/improveyourvocabulary';
 
     t.strictEqual(DatabaseConfiguration.mongoURL(), 'mongodb://1.1.1.1:12345/improveyourvocabulary');
   })
